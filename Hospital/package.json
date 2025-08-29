@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
+    "express-session": "^1.18.0",
+    "mysql": "^2.18.1",
+    "util": "^0.12.5"
+  },
+  "name": "hospital",
+  "version": "1.0.0",
+  "description": "This is for hospital web application",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Yugandhar Suryawanshi",
+  "license": "ISC"
+}
