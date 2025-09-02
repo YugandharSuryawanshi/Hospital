@@ -13,7 +13,9 @@ export default function Nav()
                             <li className="d-inline-block ml-2 mt-2 text-white"><i className="fa-solid fa-clock"></i> Emergency 24 X 7</li>
                         </ul>
                     </div>
-                    <div className="col-md-4"></div>
+                    <div className="col-md-4">
+                        
+                    </div>
                 </div>
             </div>
         </>
