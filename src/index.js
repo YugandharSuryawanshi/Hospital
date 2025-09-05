@@ -3,12 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
-import Index from './pages/Index.jsx';
+// import Index from './pages/Index.jsx';
+// import Doctors from './pages/Doctor.jsx';
+// import Cashless from './pages/Cashless.jsx';
+import ContactUs from './pages/ContactUs';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <Index />
+    {/* <Index /> */}
+    <ContactUs />
   </React.StrictMode>
 );
 
