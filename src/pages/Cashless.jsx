@@ -1,11 +1,9 @@
 import React from "react";
-import Nav from "./Nav.jsx";
 
 export default function Cashless() {
     return (
         <>
             <section>
-                <Nav />
                 <div className="container-fluid">
                     <div className="row">
                         <div className="col-12 p-0 doctor_page_banner">

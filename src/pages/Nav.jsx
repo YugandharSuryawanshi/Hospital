@@ -1,5 +1,5 @@
-import React from "react";
-import './Style.css'
+import { NavLink } from "react-router-dom";
+import './Style.css';
 export default function Nav() {
     return (
         <>
@@ -50,39 +50,32 @@ export default function Nav() {
                             >
                                 <ul className="navbar-nav flex-lg-row flex-column align-items-lg-center">
                                     <li className="nav-item mx-lg-2">
-                                        <a className="nav-link" href="#">Home</a>
+                                        <NavLink className="nav-link" to="/">Home</NavLink>
                                     </li>
 
                                     <li className="nav-item dropdown mx-lg-2">
-                                        <a
-                                            className="nav-link dropdown-toggle"
-                                            href="#"
-                                            role="button"
-                                            data-toggle="dropdown"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                        >
+                                        <NavLink className="nav-link dropdown-toggle" role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false" to="/department">
                                             Department
-                                        </a>
+                                        </NavLink>
                                         <div className="dropdown-menu">
-                                            <a className="dropdown-item" href="#">Action</a>
-                                            <a className="dropdown-item" href="#">Another action</a>
+                                            <NavLink className="dropdown-item" to="#">Action</NavLink>
+                                            <NavLink className="dropdown-item" to="#">Another action</NavLink>
                                             <div className="dropdown-divider"></div>
-                                            <a className="dropdown-item" href="#">Something else here</a>
+                                            <NavLink className="dropdown-item" to="#">Something else here</NavLink>
                                         </div>
                                     </li>
 
                                     <li className="nav-item mx-lg-2">
-                                        <a className="nav-link" href="#">Facilities</a>
+                                        <NavLink className="nav-link" to="/facilities">Facilities</NavLink>
                                     </li>
                                     <li className="nav-item mx-lg-2">
-                                        <a className="nav-link" href="#">Doctors</a>
+                                        <NavLink className="nav-link" to="/doctors">Doctors</NavLink>
                                     </li>
                                     <li className="nav-item mx-lg-2">
-                                        <a className="nav-link" href="#">Cashless</a>
+                                        <NavLink className="nav-link" to="/cashless">Cashless</NavLink>
                                     </li>
                                     <li className="nav-item mx-lg-2">
-                                        <a className="nav-link" href="#">Contact Us</a>
+                                        <NavLink className="nav-link" to="/contact">Contact Us</NavLink>
                                     </li>
 
                                 </ul>

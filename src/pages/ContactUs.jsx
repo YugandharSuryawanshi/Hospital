@@ -1,10 +1,7 @@
 import React from "react";
-import Nav from "./Nav.jsx";
-import Footer from "./Footer.jsx";
 export default function ContactUs() {
     return (
         <>
-            <Nav />
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-12 p-0 doctor_page_banner">
@@ -20,7 +17,7 @@ export default function ContactUs() {
             <section className="bg-light">
                 <div className="container pt-5 pb-5">
                     <div className="row">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59642.57188010298!2d74.72266103099992!3d20.88572026614832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdec5f2c571bb47%3A0x5827ae11b9d7cb1c!2sDhule%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1757091235023!5m2!1sen!2sin" width="100%" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59642.57188010298!2d74.72266103099992!3d20.88572026614832!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdec5f2c571bb47%3A0x5827ae11b9d7cb1c!2sDhule%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1757091235023!5m2!1sen!2sin" width="100%" height="450" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="map"></iframe>
                     </div>
                     <div className="row mt-4 mb-4">
                         <div className="col-md-8">
@@ -67,7 +64,6 @@ export default function ContactUs() {
                     </div>
                 </div>
             </section>
-            <Footer />
         </>
     )
 }
