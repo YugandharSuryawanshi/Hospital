@@ -5,22 +5,19 @@ import Doctor from "./Doctor.jsx";
 import Cashless from "./Cashless.jsx";
 import Nav from "./Nav";
 import Footer from "./Footer";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
-export default function Main()
-{
+export default function UserMain() {
     return (
         <>
-            <Router>
-                <Nav />
-                <Routes>
-                    <Route path="/" element={<Index ></Index>} />
-                    <Route path="/doctors" element={<Doctor></Doctor>} />
-                    <Route path="/cashless" element={<Cashless></Cashless>} />
-                    <Route path="/contact" element={<ContactUs></ContactUs>} />
-                </Routes>
-                <Footer />
-            </Router>
+            <Nav />
+            <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/doctors" element={<Doctor />} />
+                <Route path="/cashless" element={<Cashless />} />
+                <Route path="/contact" element={<ContactUs />} />
+            </Routes>
+            <Footer />
         </>
-    )
+    );
 }
