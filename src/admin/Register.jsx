@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [image, setImage] = useState(null); // profile image
     const navigate = useNavigate();
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
 
         if (!name || !email || !password) {
@@ -15,14 +17,32 @@ export default function Register() {
             return;
         }
 
-        const user = { name, email, password };
-        localStorage.setItem("adminUser", JSON.stringify(user));
+        try {
+            // FormData is required when sending files
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("role", "admin"); // or "user" depending
+            if (image) {
+                formData.append("image", image); // backend will handle multer upload
+            }
 
-        alert("Registration successful! Please login.");
-        navigate("/admin/login");
+            const res = await axios.post("http://localhost:5000/api/auth/register", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            if (res.status === 201) {
+                alert("Registration successful! Please login.");
+                navigate("/admin/login");
+            }
+        } catch (err) {
+            console.error("Registration error:", err.response?.data || err.message);
+            alert(err.response?.data?.message || "Registration failed");
+        }
     };
     console.log(name, email, password);
-    
+
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">

@@ -1,10 +1,9 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "./Navbar";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Login from "./Login.jsx";
-import Register from "./Register.jsx";
+import Navbar from "./Navbar";
 import ProtectedRoute from "./ProtectedRoute";
+import Register from "./Register.jsx";
 
 export default function AdminMain() {
     return (
