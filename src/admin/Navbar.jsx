@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
 import {
-    FaBars,
     FaHome,
-    FaImages,
+    FaBars,
     FaSignOutAlt,
-    FaUserMd,
+    FaHospital,
     FaUsers,
-    FaUserShield,
+    FaUserMd,
+    FaImages,
+    FaCreditCard,
+    FaConciergeBell,
 } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 export default function Navbar({ children }) {
@@ -33,13 +35,9 @@ export default function Navbar({ children }) {
 
     return (
         <div className="admin-panel">
-            {/* Sidebar */}
-            <div
-                className={`sidebar ${isOpen ? "open" : "collapsed"} ${isMobile ? "mobile" : ""
-                    }`}
-            >
+            <div className={`sidebar ${isOpen ? "open" : "collapsed"} ${isMobile ? "mobile" : ""}`}>
                 <div className="sidebar-header">
-                    <span className="admin-title">{isOpen && "Admin Panel"}</span>
+                    {isOpen && <span className="admin-title">Hospital Admin Panel</span>}
                     <button
                         className="sidebar-toggle"
                         onClick={() => setIsOpen(!isOpen)}
@@ -50,46 +48,46 @@ export default function Navbar({ children }) {
 
                 <ul className="sidebar-menu">
                     <li>
-                        <Link to="/dashboard">
-                            <FaHome className="icon" />
-                            {isOpen && "Dashboard"}
-                        </Link>
+                        <NavLink to="/" onClick={handleLogout}><FaSignOutAlt className="icon" /> {isOpen && "Logout"}</NavLink>
                     </li>
                     <li>
-                        <Link to="/users">
-                            <FaUsers className="icon" />
-                            {isOpen && "Users"}
-                        </Link>
+                        <NavLink to="/admin">
+                            <FaHome className="icon" /> {isOpen && "Dashboard"}
+                        </NavLink>
                     </li>
                     <li>
-                        <Link to="/admins">
-                            <FaUserShield className="icon" />
-                            {isOpen && "Admins"}
-                        </Link>
+                        <NavLink to="users">
+                            <FaUsers className="icon" /> {isOpen && "Users"}
+                        </NavLink>
                     </li>
                     <li>
-                        <Link to="/sliders">
-                            <FaImages className="icon" />
-                            {isOpen && "Sliders"}
-                        </Link>
+                        <NavLink to="add-doctor">
+                            <FaUserMd className="icon" /> {isOpen && "Add Doctor"}
+                        </NavLink>
                     </li>
                     <li>
-                        <Link to="/doctors">
-                            <FaUserMd className="icon" />
-                            {isOpen && "Doctors"}
-                        </Link>
+                        <NavLink to="slider">
+                            <FaImages className="icon" /> {isOpen && "Slider"}
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="facilities">
+                            <FaHospital className="icon" /> {isOpen && "Facilities"}
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="cashless">
+                            <FaCreditCard className="icon" /> {isOpen && "Cashless Points"}
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="services">
+                            <FaConciergeBell className="icon" /> {isOpen && "Services"}
+                        </NavLink>
                     </li>
                 </ul>
 
-                <div className="sidebar-footer">
-                    <button className="logout-btn" onClick={handleLogout}>
-                        <FaSignOutAlt className="icon" />
-                        {isOpen && "Logout"}
-                    </button>
-                </div>
             </div>
-
-            {/* Main content */}
             <div
                 className={`main-content ${isOpen ? "open" : "collapsed"} ${isMobile && !isOpen ? "full" : ""
                     }`}
