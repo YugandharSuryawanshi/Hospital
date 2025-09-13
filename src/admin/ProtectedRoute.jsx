@@ -1,16 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 
-/**
- * Usage:
- * <ProtectedRoute>
- *   <AdminComponent />
- * </ProtectedRoute>
- *
- * This checks:
- *  - token exists in localStorage ('adminToken')
- *  - stored user (adminUser) exists and has role === 'admin'
- */
 export default function ProtectedRoute({ children }) {
     const token = localStorage.getItem("adminToken");
     const rawUser = localStorage.getItem("adminUser");

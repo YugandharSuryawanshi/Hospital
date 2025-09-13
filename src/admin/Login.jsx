@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Login() {
     const [email, setEmail] = useState("");
@@ -88,6 +88,10 @@ export default function Login() {
                         <button className="btn btn-primary" type="submit" disabled={loading}>
                             {loading ? "Logging in..." : "Login"}
                         </button>
+                    </div>
+                    <div className="mt-3">
+                        <NavLink className={"float-left"} href="/admin/forgot-password">Forgot Password?</NavLink>
+                        <NavLink className="float-right" to={"/admin/register"}><span className="text-dark">Not a member?</span> Sign Up</NavLink>
                     </div>
                 </form>
             </div>

@@ -1,98 +1,150 @@
-import { useState, useEffect } from "react";
-import {
-    FaHome,
-    FaBars,
-    FaSignOutAlt,
-    FaHospital,
-    FaUsers,
-    FaUserMd,
-    FaImages,
-    FaCreditCard,
-    FaConciergeBell,
-} from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
-export default function Navbar({ children }) {
-    const [isOpen, setIsOpen] = useState(true);
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+export default function Navbar() {
+    const user = JSON.parse(localStorage.getItem("adminUser") || "null");
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [openGroups, setOpenGroups] = useState({});
+
+    const toggleGroup = (group) => {
+        setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }));
+    };
+
     const navigate = useNavigate();
 
-    // Update window width on resize
-    useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    const isMobile = windowWidth < 768;
-
     const handleLogout = () => {
-        localStorage.removeItem("adminToken");
         localStorage.removeItem("adminUser");
-        navigate("/login", { replace: true });
+        localStorage.removeItem("adminToken");
+        navigate("/admin/login");
     };
 
     return (
-        <div className="admin-panel">
-            <div className={`sidebar ${isOpen ? "open" : "collapsed"} ${isMobile ? "mobile" : ""}`}>
+        <div className="wrapper d-flex">
+            <div className={`sidebar ${isSidebarOpen ? "open" : "collapsed"}`}>
                 <div className="sidebar-header">
-                    {isOpen && <span className="admin-title">Hospital Admin Panel</span>}
+                    <div className="sidebar-brand">Hospital Admin Panel</div>
                     <button
-                        className="sidebar-toggle"
-                        onClick={() => setIsOpen(!isOpen)}
+                        className="btn-close d-lg-none"
+                        onClick={() => setSidebarOpen(false)}
                     >
-                        <FaBars />
+                        ✖
                     </button>
                 </div>
 
-                <ul className="sidebar-menu">
-                    <li>
-                        <NavLink to="/" onClick={handleLogout}><FaSignOutAlt className="icon" /> {isOpen && "Logout"}</NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/admin">
-                            <FaHome className="icon" /> {isOpen && "Dashboard"}
+                <ul className="sidebar-nav">
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin">
+                            <i className="fas fa-tachometer-alt nav-icon"></i>
+                            <b>Dashboard</b>
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="users">
-                            <FaUsers className="icon" /> {isOpen && "Users"}
+
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/slides">
+                            <i className="fas fa-palette nav-icon"></i>
+                            <b>Slides</b>
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="add-doctor">
-                            <FaUserMd className="icon" /> {isOpen && "Add Doctor"}
-                        </NavLink>
+                    <li className="nav-item">
+                        <a className="nav-link" href="#">
+                            <i className="fas fa-font nav-icon"></i>
+                            <b>Typography</b>
+                        </a>
                     </li>
-                    <li>
-                        <NavLink to="slider">
-                            <FaImages className="icon" /> {isOpen && "Slider"}
-                        </NavLink>
+
+                    <li className="nav-title">Components</li>
+                    <li className="nav-group">
+                        <a
+                            className="nav-link nav-group-toggle"
+                            href="#"
+                            onClick={() => toggleGroup("base")}
+                        >
+                            <i className="fas fa-puzzle-piece nav-icon"></i>
+                            <b>Base</b>
+                            <i className="fas fa-chevron-down ms-auto text-white"></i>
+                        </a>
+                        {openGroups["base"] && (
+                            <ul className="nav-group-items">
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Accordion</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Breadcrumb</a>
+                                </li>
+                            </ul>
+                        )}
                     </li>
-                    <li>
-                        <NavLink to="facilities">
-                            <FaHospital className="icon" /> {isOpen && "Facilities"}
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="cashless">
-                            <FaCreditCard className="icon" /> {isOpen && "Cashless Points"}
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="services">
-                            <FaConciergeBell className="icon" /> {isOpen && "Services"}
-                        </NavLink>
+
+                    <li className="nav-title">Extras</li>
+                    <li className="nav-group">
+                        <a
+                            className="nav-link nav-group-toggle"
+                            href="#"
+                            onClick={() => toggleGroup("pages")}
+                        >
+                            <i className="fas fa-file nav-icon"></i>
+                            <b>Pages</b>
+                            <i className="fas fa-chevron-down ms-auto text-white"></i>
+                        </a>
+                        {openGroups["pages"] && (
+                            <ul className="nav-group-items">
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Login</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Register</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Error 404</a>
+                                </li>
+                                <li className="nav-item">
+                                    <a className="nav-link" href="#">Error 500</a>
+                                </li>
+                            </ul>
+                        )}
                     </li>
                 </ul>
-
             </div>
-            <div
-                className={`main-content ${isOpen ? "open" : "collapsed"} ${isMobile && !isOpen ? "full" : ""
-                    }`}
-            >
-                {children}
+
+            <div className="main flex-grow-1">
+                <header className="header">
+                    <button
+                        className="header-toggler"
+                        onClick={() => setSidebarOpen(!isSidebarOpen)}
+                    >
+                        <i className="text-dark fas fa-bars nav-icon"></i>
+                    </button>
+                    <ul className="header-nav">
+                        <li><a href="#">
+                            <i className="fas fa-bell nav-icon text-dark"></i>
+                        </a>
+                        </li>
+                    </ul>
+                    <ul className="header-nav ms-auto">
+                        <li className="dropdown">
+                            <button className="btn">
+                                <i className="fas fa-user nav-icon text-dark"></i>
+                                <b>{user ? ` ${user.user_name}` : ""}</b>
+                            </button>
+                            <div className="dropdown-menu">
+                                <a href="#">
+                                    <i className="fas fa-cog nav-icon text-dark"></i>
+                                    <b> Settings</b>
+                                </a>
+                                <button onClick={handleLogout}>
+                                    <i className="fas fa-sign-out nav-icon text-dark"></i>
+                                    <b> Logout</b>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                </header>
+
+                {/* Here the child pages will render */}
+                <main className="content p-3">
+                    <Outlet />
+                </main>
             </div>
         </div>
     );

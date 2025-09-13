@@ -1,51 +1,33 @@
-// Main.jsx
+// src/admin/Main.jsx
 import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./Dashboard";
-import Login from "./Login.jsx";
+import Login from "./Login";
 import Navbar from "./Navbar";
 import ProtectedRoute from "./ProtectedRoute";
-import Register from "./Register.jsx";
-import Slider from "./Slider.jsx";
+import Register from "./Register";
+import Slides from "./Slides";
 
 export default function AdminMain() {
     return (
         <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
 
             <Route
                 path="/"
                 element={
                     <ProtectedRoute>
-                        <Navbar>
-                            <Dashboard />
-                        </Navbar>
+                        <Navbar />
                     </ProtectedRoute>
                 }
-            />
+            >
+                <Route index element={<Dashboard />} />
+                <Route path="slides" element={<Slides />} />
+                <Route path="settings" element={<h2>Admin Settings</h2>} />
+            </Route>
 
-            <Route
-                path="/settings"
-                element={
-                    <ProtectedRoute>
-                        <Navbar>
-                            <h2>Admin Settings</h2>
-                        </Navbar>
-                    </ProtectedRoute>
-                }
-            />
-
-            <Route path="/slider" element={
-                <ProtectedRoute>
-                    <Navbar>
-                        <Slider />
-                    </Navbar>
-                </ProtectedRoute>
-            }
-            />
-
-            {/* Redirect unknown routes */}
-            {/* <Route path="*" element={<Navigate to="/" />} /> */}
+            <Route path="/" element={<Navigate to="/admin" replace />} />
+            <Route path="*" element={<Navigate to="/admin" replace />} />
         </Routes>
     );
 }
