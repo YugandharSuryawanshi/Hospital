@@ -47,10 +47,10 @@ export default function Navbar() {
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link" href="#">
+                        <NavLink className="nav-link" to="/admin/">
                             <i className="fas fa-font nav-icon"></i>
                             <b>Typography</b>
-                        </a>
+                        </NavLink>
                     </li>
 
                     <li className="nav-title">Components</li>
@@ -67,10 +67,10 @@ export default function Navbar() {
                         {openGroups["base"] && (
                             <ul className="nav-group-items">
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Accordion</a>
+                                    <NavLink className="nav-link" to="#">Accordion</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Breadcrumb</a>
+                                    <NavLink className="nav-link" to="#">Breadcrumb</NavLink>
                                 </li>
                             </ul>
                         )}
@@ -90,16 +90,13 @@ export default function Navbar() {
                         {openGroups["pages"] && (
                             <ul className="nav-group-items">
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Login</a>
+                                    <NavLink className="nav-link" to="/admin/Login">Login</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Register</a>
+                                    <NavLink className="nav-link" to="/admin/Register">Register</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <a className="nav-link" href="#">Error 404</a>
-                                </li>
-                                <li className="nav-item">
-                                    <a className="nav-link" href="#">Error 500</a>
+                                    <NavLink className="nav-link" to="/admin/Error">Error 404</NavLink>
                                 </li>
                             </ul>
                         )}
