@@ -96,7 +96,7 @@ export default function Navbar() {
                                     <NavLink className="nav-link" to="/admin/Register">Register</NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink className="nav-link" to="/admin/Error">Error 404</NavLink>
+                                    <NavLink className="nav-link" to="/admin/slidelist">SlideList</NavLink>
                                 </li>
                             </ul>
                         )}
@@ -120,15 +120,34 @@ export default function Navbar() {
                     </ul>
                     <ul className="header-nav ms-auto">
                         <li className="dropdown">
-                            <button className="btn">
-                                <i className="fas fa-user nav-icon text-dark"></i>
+                            <button className="btn d-flex align-items-center gap-2">
+                                {user && user.user_profile ? (
+                                    // show the image
+                                    <img
+                                        src={`http://localhost:5000/uploads/${user.user_profile}`}
+                                        alt="Profile"
+                                        style={{
+                                            width: 40,
+                                            height: 40,
+                                            objectFit: "cover",
+                                            border: "1px groove",
+                                        }}
+                                        className="mr-2 rounded-circle"
+                                    />
+                                ) : (
+                                    // show default icon
+                                    <i className="fas fa-user nav-icon text-dark" style={{ fontSize: 24 }}></i>
+                                )}
+
+                                {/* name text */}
                                 <b>{user ? ` ${user.user_name}` : ""}</b>
                             </button>
+
                             <div className="dropdown-menu">
-                                <a href="#">
-                                    <i className="fas fa-cog nav-icon text-dark"></i>
-                                    <b> Settings</b>
-                                </a>
+                                <NavLink to="/admin/profile">
+                                    <i className="fas fa-user nav-icon text-dark"></i>
+                                    <b> Profile</b>
+                                </NavLink>
                                 <button onClick={handleLogout}>
                                     <i className="fas fa-sign-out nav-icon text-dark"></i>
                                     <b> Logout</b>

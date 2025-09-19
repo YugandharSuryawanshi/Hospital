@@ -6,6 +6,8 @@ import Navbar from "./Navbar";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Slides from "./Slides";
+import Profile from "./Profile";
+import SlidesList from "./SlidesList";
 
 export default function AdminMain() {
     return (
@@ -23,7 +25,8 @@ export default function AdminMain() {
             >
                 <Route index element={<Dashboard />} />
                 <Route path="slides" element={<Slides />} />
-                <Route path="settings" element={<h2>Admin Settings</h2>} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="slidelist" element={<SlidesList />} />
             </Route>
 
             <Route path="/" element={<Navigate to="/admin" replace />} />
