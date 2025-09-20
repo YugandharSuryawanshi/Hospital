@@ -47,9 +47,9 @@ export default function Navbar() {
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" to="/admin/">
-                            <i className="fas fa-font nav-icon"></i>
-                            <b>Typography</b>
+                        <NavLink className="nav-link" to="/admin/doctors">
+                            <i className="fas fa-users nav-icon"></i>
+                            <b>Doctors</b>
                         </NavLink>
                     </li>
 

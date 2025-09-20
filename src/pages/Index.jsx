@@ -1,123 +1,131 @@
+import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-const images = [
-    "./images/slider1.jpg",
-    "./images/slider2.jpg",
-    "./images/slider3.jpg",
-];
-
 export default function Index() {
     const [index, setIndex] = useState(0);
-
-    const displayTime = 7000;
+    const displayTime = 8000;
     const transitionTime = 1000;
     const totalTime = displayTime + transitionTime;
 
+    const [slides, setSlides] = useState([]);
+
     useEffect(() => {
-        const timer = setInterval(() => {
-            setIndex((prev) => (prev + 1) % images.length);
-        }, totalTime);
-        return () => clearInterval(timer);
+        axios
+            .get("http://localhost:5000/api/user/slides")
+            .then((res) => setSlides(res.data))
+            .catch((err) => console.error("Error fetching slides", err));
     }, []);
 
+    useEffect(() => {
+        if (slides.length === 0) return;
+        const timer = setInterval(() => {
+            setIndex((prev) => (prev + 1) % slides.length);
+        }, totalTime);
+        return () => clearInterval(timer);
+    }, [slides, totalTime]);
+
     const nextSlide = () => {
-        setIndex((prev) => (prev + 1) % images.length);
+        setIndex((prev) => (prev + 1) % slides.length);
     };
 
     const prevSlide = () => {
-        setIndex((prev) => (prev - 1 + images.length) % images.length);
+        setIndex((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
+    if (slides.length === 0) {
+        return (
+            <div className="container text-center py-5">
+                <h3>No slides available</h3>
+            </div>
+        );
+    }
+
     return (
-        <>
-            <div className="container-fluid p-0">
-                <div className="row m-0">
-                    <div className="col-12 p-0">
-                        <div
-                            className="position-relative d-flex justify-content-center align-items-center"
+        <div className="container-fluid p-0">
+            <div className="row m-0">
+                <div className="col-12 p-0">
+                    <div
+                        className="position-relative d-flex justify-content-center align-items-center"
+                        style={{
+                            width: "100%",
+                            overflow: "hidden",
+                        }}
+                    >
+                        <AnimatePresence mode="wait">
+                            <motion.img
+                                key={index}
+                                src={`http://localhost:5000/${slides[index].slide_image}`}
+                                alt="slider"
+                                initial={{ opacity: 0, scale: 1.05 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.98 }}
+                                transition={{
+                                    duration: transitionTime / 1000,
+                                    ease: "easeInOut",
+                                }}
+                                style={{
+                                    width: "100%",
+                                    height: "auto",
+                                    objectFit: "cover",
+                                    position: "relative",
+                                }}
+                            />
+                        </AnimatePresence>
+
+                        <button
+                            onClick={prevSlide}
+                            className="btn btn-dark position-absolute"
                             style={{
-                                width: "100%",
-                                overflow: "hidden",
+                                top: "50%",
+                                left: "10px",
+                                transform: "translateY(-50%)",
+                                borderRadius: "50%",
+                                opacity: 0.7,
+                                zIndex: 2,
                             }}
                         >
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={index}
-                                    src={images[index]}
-                                    alt="slider"
-                                    initial={{ opacity: 0, scale: 1.05 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.98 }}
-                                    transition={{
-                                        duration: transitionTime / 1000,
-                                        ease: "easeInOut",
-                                    }}
+                            ❮
+                        </button>
+
+                        <button
+                            onClick={nextSlide}
+                            className="btn btn-dark position-absolute"
+                            style={{
+                                top: "50%",
+                                right: "10px",
+                                transform: "translateY(-50%)",
+                                borderRadius: "50%",
+                                opacity: 0.7,
+                                zIndex: 2,
+                            }}
+                        >
+                            ❯
+                        </button>
+
+                        <div
+                            className="position-absolute w-100 d-flex justify-content-center"
+                            style={{ bottom: "12px", zIndex: 2 }}
+                        >
+                            {slides.map((_, i) => (
+                                <div
+                                    key={i}
+                                    onClick={() => setIndex(i)}
                                     style={{
-                                        width: "100%",
-                                        height: "auto",
-                                        objectFit: "cover",
-                                        position: "relative",
+                                        height: "10px",
+                                        width: "10px",
+                                        margin: "0 5px",
+                                        borderRadius: "50%",
+                                        cursor: "pointer",
+                                        backgroundColor: i === index ? "#000" : "#bbb",
+                                        transition: "background-color 0.3s ease",
                                     }}
-                                />
-                            </AnimatePresence>
-
-                            <button
-                                onClick={prevSlide}
-                                className="btn btn-dark position-absolute"
-                                style={{
-                                    top: "50%",
-                                    left: "10px",
-                                    transform: "translateY(-50%)",
-                                    borderRadius: "50%",
-                                    opacity: 0.7,
-                                    zIndex: 2,
-                                }}
-                            >
-                                ❮
-                            </button>
-
-                            <button
-                                onClick={nextSlide}
-                                className="btn btn-dark position-absolute"
-                                style={{
-                                    top: "50%",
-                                    right: "10px",
-                                    transform: "translateY(-50%)",
-                                    borderRadius: "50%",
-                                    opacity: 0.7,
-                                    zIndex: 2,
-                                }}
-                            >
-                                ❯
-                            </button>
-
-                            <div
-                                className="position-absolute w-100 d-flex justify-content-center"
-                                style={{ bottom: "12px", zIndex: 2 }}
-                            >
-                                {images.map((_, i) => (
-                                    <div
-                                        key={i}
-                                        onClick={() => setIndex(i)}
-                                        style={{
-                                            height: "10px",
-                                            width: "10px",
-                                            margin: "0 5px",
-                                            borderRadius: "50%",
-                                            cursor: "pointer",
-                                            backgroundColor:
-                                                i === index ? "#000" : "#bbb",
-                                            transition:
-                                                "background-color 0.3s ease",
-                                        }}
-                                    ></div>
-                                ))}
-                            </div>
+                                ></div>
+                            ))}
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

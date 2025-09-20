@@ -1,4 +1,3 @@
-// src/admin/Main.jsx
 import { Navigate, Route, Routes } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import Login from "./Login";
@@ -8,6 +7,7 @@ import Register from "./Register";
 import Slides from "./Slides";
 import Profile from "./Profile";
 import SlidesList from "./SlidesList";
+import Doctors from "./Doctors";
 
 export default function AdminMain() {
     return (
@@ -15,18 +15,16 @@ export default function AdminMain() {
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
 
-            <Route
-                path="/"
-                element={
-                    <ProtectedRoute>
-                        <Navbar />
-                    </ProtectedRoute>
-                }
-            >
+            <Route path="/" element={
+                <ProtectedRoute>
+                    <Navbar />
+                </ProtectedRoute>
+            }>
                 <Route index element={<Dashboard />} />
                 <Route path="slides" element={<Slides />} />
                 <Route path="profile" element={<Profile />} />
                 <Route path="slidelist" element={<SlidesList />} />
+                <Route path="doctors" element={<Doctors />} />
             </Route>
 
             <Route path="/" element={<Navigate to="/admin" replace />} />
