@@ -52,6 +52,12 @@ export default function Navbar() {
                             <b>Doctors</b>
                         </NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/appointments">
+                            <i className="fas fa-book nav-icon"></i>
+                            <b>Appointments</b>
+                        </NavLink>
+                    </li>
 
                     <li className="nav-title">Components</li>
                     <li className="nav-group">

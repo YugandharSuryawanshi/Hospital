@@ -1,13 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import Appointments from "./Appointments";
 import Dashboard from "./Dashboard";
+import Doctors from "./Doctors";
 import Login from "./Login";
 import Navbar from "./Navbar";
+import Profile from "./Profile";
 import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Slides from "./Slides";
-import Profile from "./Profile";
 import SlidesList from "./SlidesList";
-import Doctors from "./Doctors";
 
 export default function AdminMain() {
     return (
@@ -25,6 +26,7 @@ export default function AdminMain() {
                 <Route path="profile" element={<Profile />} />
                 <Route path="slidelist" element={<SlidesList />} />
                 <Route path="doctors" element={<Doctors />} />
+                <Route path="appointments" element={<Appointments />} />
             </Route>
 
             <Route path="/" element={<Navigate to="/admin" replace />} />
