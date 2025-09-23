@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./Style.css";
 function Doctors() {
     const [drdata, setDrdata] = useState([]);
     useEffect(() => {
-        setDrdata(
-            [
-                {
-                    "name": "Dr. Vinayak Murti",
-                    "position": "Consultant Cardiologist",
-                    "certificate": "M.D (Medicine), D.N.B, D.M (Cardiology)",
-                    "photo": "./images/doc-8.jpg",
-                },
-                {
-                    "name": "Dr. Isha patel",
-                    "position": "Consultant Obstetrician & Gynaecologist",
-                    "certificate": "M.D, D.N.B (OBGYN) Obstetrics and Gynecology",
-                    "photo": "./images/doc-1.jpg",
-                }
-            ]
-        )
+        axios.get("http://localhost:5000/api/admin/getdoctors").then((res) => {
+            setDrdata(res.data);
+        })
     }, []);
-    console.log(drdata);
     return (
         <>
             <div className="container-fluid">
@@ -45,12 +32,12 @@ function Doctors() {
                                         <div className="card card-body">
                                             <div className="row">
                                                 <div className="col-4">
-                                                    <img src={item.photo} alt="" className="doctor_img rounded-circle w-100" />
+                                                    <img src={'http://localhost:5000/uploads/' + item.dr_photo} alt="" className="doctor_img rounded-circle w-100" />
                                                 </div>
                                                 <div className="col-8">
-                                                    <h3>{item.name}</h3>
-                                                    <p>{item.position}</p>
-                                                    <h6>{item.certificate}</h6>
+                                                    <h3>{item.dr_name}</h3>
+                                                    <p>{item.dr_position}</p>
+                                                    <h6>{item.dr_certificate}</h6>
                                                     <button className="btn btn-outline-primary mt-2">View Profile</button><br /><br />
                                                     <button className="btn btn-primary">Make An Appointment</button>
                                                 </div>
