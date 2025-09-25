@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import './table.css';
 
+
 export default function Appointments() {
     const [appointments, setAppointments] = useState([]);
 
@@ -39,7 +40,7 @@ export default function Appointments() {
                 <div className="responsive-table-wrapper">
 
                     <table className="table table-bordered table-hover responsive-table mb-0">
-                        <thead className="table-dark">
+                        <thead className="bg-dark text-white">
                             <tr>
                                 <th>Sr.No.</th>
                                 <th>Patient Name</th>
@@ -75,7 +76,6 @@ export default function Appointments() {
                                 </tr>
                             ))}
                         </tbody>
-
                     </table>
                 </div>
             </section>
