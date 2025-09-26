@@ -14,7 +14,11 @@ export default function Appointments() {
     }, []);
 
     if (appointments.length === 0) {
-        return <div>Loading...</div>;
+        return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+            <span className="visually-hidden mr-3">Loading... </span>
+            <div className="spinner-border text-danger" role="status" style={{ width: "3rem", height: "3rem" }}>
+            </div>
+        </div>;
     }
 
     return (
