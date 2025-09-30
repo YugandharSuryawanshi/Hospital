@@ -65,11 +65,9 @@ export default function Appointments() {
                                     <td>{d.user_name}</td>
                                     <td>{d.user_contact}</td>
                                     <td>{d.user_email}</td>
-                                    {/* Date */}
                                     <td>
                                         {new Date(d.appointment_datetime).toLocaleDateString()}
                                     </td>
-                                    {/* Time */}
                                     <td>
                                         {new Date(d.appointment_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </td>
