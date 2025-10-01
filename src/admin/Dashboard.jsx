@@ -11,7 +11,6 @@ export default function Dashboard() {
             <p>This is the protected admin area. </p>
             <p>User ID: {userid}</p>
             <p>user Profile : {user ? user.user_profile : ""}</p>
-            {/* <img src={user ? 'http://localhost:5000/uploads/'+user.user_profile : ""} alt="" /> */}
         </div>
         </>
     );
