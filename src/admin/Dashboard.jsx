@@ -9,7 +9,6 @@ export default function Dashboard() {
             <h2>Dashboard</h2>
             <p>Welcome{user ? `, ${user.user_name}` : ""}.</p>
             <p>This is the protected admin area. </p>
-            <p>User ID: {userid}</p>
             <p>user Profile : {user ? user.user_profile : ""}</p>
         </div>
         </>
