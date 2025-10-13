@@ -74,7 +74,7 @@ export default function Appointments() {
                                     <td>{d.notes}</td>
                                     <td>{d.status}</td>
                                     <td>{d.dr_name}</td>
-                                    <td><button className="btn btn-primary">View</button></td>
+                                    <td><button className="btn btn-primary">View More</button></td>
                                 </tr>
                             ))}
                         </tbody>
