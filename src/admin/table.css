@@ -10,11 +10,9 @@
 .responsive-table {
     width: 100%;
     min-width: 900px;
-    /* keeps columns readable on medium screens; adjust if you have more/fewer columns */
     table-layout: auto;
 }
 
-/* ensure td doesn't wrap (keeps columns stable on medium screens) */
 .responsive-table th,
 .responsive-table td {
     vertical-align: middle;
@@ -29,17 +27,15 @@
     border-radius: 6px;
 }
 
-/* Small screens: convert table to stacked cards for best mobile UX */
+/* Small screens: convert table to stacked cards for best mobile view */
 @media (max-width: 576px) {
     .responsive-table {
         min-width: 0;
-        /* allow it to shrink to container width */
         border: none;
     }
 
     .responsive-table thead {
         display: none;
-        /* hide header - we'll use data-labels */
     }
 
     .responsive-table tbody tr {
@@ -63,7 +59,6 @@
         border-bottom: 0;
     }
 
-    /* Show header label inside cell using data-label attribute from JSX */
     .responsive-table tbody tr td::before {
         content: attr(data-label);
         font-weight: 600;
@@ -73,7 +68,6 @@
         flex-shrink: 0;
     }
 
-    /* make long text wrap in mobile */
     .responsive-table tbody tr td {
         white-space: normal;
     }
