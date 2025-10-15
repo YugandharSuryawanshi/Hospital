@@ -39,7 +39,7 @@ export default function Appointments() {
                 </div>
             </div>
 
-            {/* New section print all appointments */}
+            {/* New section all appointments are print here */}
             <section className="bg-light p-3">
                 <div className="responsive-table-wrapper">
 
