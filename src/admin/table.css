@@ -19,7 +19,7 @@
     white-space: nowrap;
 }
 
-/* make images inside table fit nicely if you use any */
+/* make images inside table fit if you use any */
 .responsive-table img {
     max-width: 120px;
     height: auto;
