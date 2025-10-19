@@ -14,8 +14,7 @@
     }
 }
 
-
-/* allow horizontal scroll on small screens */
+/* allow horizontal scroll on small screens (if needed) */
 .table-responsive {
     -webkit-overflow-scrolling: touch;
 }
