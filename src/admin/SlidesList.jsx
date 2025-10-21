@@ -1,6 +1,6 @@
 // src/admin/SlidesList.jsx
-import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function SlidesList() {
     const [slides, setSlides] = useState([]);
@@ -86,7 +86,7 @@ export default function SlidesList() {
                             ) : (
                                 <tr>
                                     <td colSpan="3" className="text-center">
-                                        No slides found
+                                        No slides Available...
                                     </td>
                                 </tr>
                             )}
