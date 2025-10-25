@@ -22,14 +22,13 @@ export default function Slides() {
             const res = await axios.post("http://localhost:5000/api/admin/slides", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`, // add token if route protected
+                    Authorization: `Bearer ${token}`, // add token if route are protected
                 },
             });
 
             alert("Slide added successfully!");
             setImage(null);
             e.target.reset();
-            console.log("Server response:", res.data);
         } catch (err) {
             console.error(err);
             alert("Error uploading slide");
