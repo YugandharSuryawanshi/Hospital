@@ -61,16 +61,10 @@ export default function Slides() {
                                 <form onSubmit={addSlide}>
                                     <div className=" col-md-4 mb-4 text-center">
                                         <label className="form-label fw-semibold">Add Slide Image:</label>
-                                        <input
-                                            type="file"
-                                            className="form-control form-control-lg"
-                                            onChange={(e) => setImage(e.target.files[0])}
-                                        />
+                                        <input type="file" className="form-control form-control-lg" onChange={(e) => setImage(e.target.files[0])}/>
                                     </div>
                                     <div className="col-md-4 text-center">
-                                        <button type="submit" className="btn btn-warning btn-lg shadow-sm register-btn">
-                                            Add Slide
-                                        </button>
+                                        <button type="submit" className="btn btn-warning btn-lg shadow-sm register-btn"> Add Slide </button>
                                     </div>
                                 </form>
                             </div>
