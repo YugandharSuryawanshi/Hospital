@@ -41,7 +41,11 @@ export default function Footer() {
                             title="Vinayak Hospital Facebook Post Embed">
                         </iframe>
 
+                        <p>Developed By Yugandhar Marathe</p>
+
+
                     </div>
+
                 </div>
             </div>
         </>
