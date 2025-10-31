@@ -32,17 +32,10 @@ export default function Footer() {
                         <h2>Follow Us</h2>
                         <iframe
                             src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Fvinayakhospitalofficial%2Fposts%2F122295927938027364%2F&width=550"
-                            width="100%"
-                            height="300"
-                            scrolling="no"
-                            frameborder="0"
-                            allowTransparency="true"
-                            allow="encrypted-media"
-                            title="Vinayak Hospital Facebook Post Embed">
+                            width="100%" height="300" frameborder="0" allowTransparency="true"
+                            allow="encrypted-media" title="Vinayak Hospital Facebook Post Embed">
                         </iframe>
-
                         <p>Developed By Yugandhar Marathe</p>
-
 
                     </div>
 
