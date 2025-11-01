@@ -1,4 +1,3 @@
-import react from "react";
 
 export default function Footer() {
     return (
@@ -35,7 +34,7 @@ export default function Footer() {
                             width="100%" height="300" frameborder="0" allowTransparency="true"
                             allow="encrypted-media" title="Vinayak Hospital Facebook Post Embed">
                         </iframe>
-                        <p>Developed By Yugandhar Marathe</p>
+                        <p>Developed By Yugandhar Marathe. Contact@ yugandharsuryawanshi0@gmail.com</p>
 
                     </div>
 
