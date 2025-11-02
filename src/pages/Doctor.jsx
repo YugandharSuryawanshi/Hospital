@@ -1,4 +1,3 @@
-// src/pages/Doctor.jsx  (or wherever your file lives)
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -68,8 +67,7 @@ export default function Doctor() {
                                                     alt={item.dr_name || "Doctor"}
                                                     className="doctor_img rounded-circle w-100"
                                                     onError={(e) => {
-                                                        e.currentTarget.src =
-                                                            "https://via.placeholder.com/150?text=No+Image";
+                                                        e.currentTarget.src = "https://via.placeholder.com/150?text=No+Image";
                                                     }}
                                                 />
                                             </div>
@@ -83,10 +81,8 @@ export default function Doctor() {
                                                     <button className="btn btn-outline-primary btn-sm mr-2">
                                                         View Profile
                                                     </button>
-                                                    <button
-                                                        className="btn btn-primary btn-sm"
-                                                        onClick={() => handleAppointmentClick(item.doctor_id)}
-                                                    >
+                                                    <button className="btn btn-primary btn-sm"
+                                                        onClick={() => handleAppointmentClick(item.doctor_id)}>
                                                         Make An Appointment
                                                     </button>
                                                 </div>
