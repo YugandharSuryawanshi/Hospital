@@ -58,6 +58,12 @@ export default function Navbar() {
                             <b>Appointments</b>
                         </NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/facilities">
+                            <i className="fas fa-concierge-bell nav-icon"></i>
+                            <b>Facilities</b>
+                        </NavLink>
+                    </li>
 
                     <li className="nav-title">Components</li>
                     <li className="nav-group">
