@@ -8,6 +8,23 @@ export default function Facilities() {
                 <h1 className="text-center text-danger">* Facilities *</h1>
                 <button className="btn btn-danger float-right">Add Facility</button>
             </div><br /><br />
+
+            <div className="container">
+                <form action="">
+                    <div className="form-group">
+                        <label htmlFor="facility">Facility</label>
+                        <input type="text" className="form-control" id="facility" placeholder="Enter Facility" />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="description">Description</label>
+                        <input type="text" className="form-control" id="description" placeholder="Enter Description" />
+                    </div>
+                    <button type="submit" className="btn btn-primary">Add</button>
+                </form>
+            </div>
+
+
+
             <div className="container">
                 <div className="row">
                     <div className="col-md-12">
