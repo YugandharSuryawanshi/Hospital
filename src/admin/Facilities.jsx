@@ -1,7 +1,26 @@
 import React from "react";
-// import axios from "axios";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Facilities() {
+
+    const [facilities, setFacilities] = useState([]);
+
+    useEffect(() => {
+        axios
+            .get("http://localhost:5000/api/admin/facilities")
+            .then((res) => setFacilities(res.data))
+            .catch((err) => console.error("Error fetching appointments", err));
+    }, []);
+
+    // if (facilities.length === 0) {
+    //     return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+    //         <span className="visually-hidden mr-3">Loading... </span>
+    //         <div className="spinner-border text-danger" role="status" style={{ width: "3rem", height: "3rem" }}>
+    //         </div>
+    //     </div>;
+    // }
+
     return (
         <>
             <div className="container">
@@ -10,17 +29,20 @@ export default function Facilities() {
             </div><br /><br />
 
             <div className="container">
-                <form action="">
-                    <div className="form-group">
-                        <label htmlFor="facility">Facility</label>
-                        <input type="text" className="form-control" id="facility" placeholder="Enter Facility" />
+                <div className="row">
+                    <div className="col-md-2"></div>
+                    <div className="col-md-8">
+                        <form action="" className="text-center">
+                            <div className="form-group">
+                                <input type="text" className="form-control" id="facility" placeholder="Enter Facility" />
+                            </div>
+                            <div className="form-group">
+                                <input type="text" className="form-control" id="description" placeholder="Enter Description" />
+                            </div>
+                            <button type="submit" className="btn btn-danger mb-4">Add</button>
+                        </form>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="description">Description</label>
-                        <input type="text" className="form-control" id="description" placeholder="Enter Description" />
-                    </div>
-                    <button type="submit" className="btn btn-primary">Add</button>
-                </form>
+                </div>
             </div>
 
 
