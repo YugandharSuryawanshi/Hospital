@@ -27,6 +27,7 @@ export default function Facilities() {
             facility_name: facility_name,
             facility_desc: facility_desc,
         };
+        
         console.log(facility_name);
         console.log(facility_desc);
         console.log(facility_image);
