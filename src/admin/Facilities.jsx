@@ -47,7 +47,7 @@ export default function Facilities() {
             }
 
             alert("Facility added successfully!");
-            setImage(null);
+            setFacility_image(null);
             e.target.reset();
         } catch (err) {
             console.error(err);
