@@ -21,13 +21,12 @@ export default function Facilities() {
 
         const token = localStorage.getItem("adminToken");
 
-
         const payload = {
             facility_id: facility_id,
             facility_name: facility_name,
             facility_desc: facility_desc,
         };
-        
+
         console.log(facility_name);
         console.log(facility_desc);
         console.log(facility_image);
@@ -77,8 +76,8 @@ export default function Facilities() {
                 <h1 className="text-center text-danger">* Facilities *</h1>
                 <button className="btn badge-warning float-right ml-2">Show Facilities</button>
                 <button className="btn btn-danger float-right">Add Facility</button>
-            </div><br /><br />
-
+            </div>
+            <br /><br />
             <div className="container">
                 <div className="row">
                     <div className="col-md-2"></div>
@@ -105,7 +104,6 @@ export default function Facilities() {
                     </div>
                 </div>
             </div>
-
 
 
             <div className="container">
