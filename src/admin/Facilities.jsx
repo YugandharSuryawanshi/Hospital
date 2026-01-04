@@ -40,12 +40,7 @@ export default function Facilities() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            if (res.status !== 201) {
-                throw new Error("Failed to create appointment.");
-            }
-
-            alert("Facility added successfully!");
+            alert(res.data.message);
             setFacility_image(null);
             e.target.reset();
         } catch (err) {
