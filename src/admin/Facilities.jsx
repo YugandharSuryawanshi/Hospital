@@ -30,6 +30,8 @@ export default function Facilities() {
         console.log(facility_name);
         console.log(facility_desc);
         console.log(facility_image);
+        console.log(facilities);
+        
 
 
 
@@ -52,10 +54,11 @@ export default function Facilities() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5000/api/admin/facilities")
+            .get("http://localhost:5000/api/admin/getAllFacilities")
             .then((res) => setFacilities(res.data))
             .catch((err) => console.error("Error fetching appointments", err));
     }, []);
+    
 
     // if (facilities.length === 0) {
     //     return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
