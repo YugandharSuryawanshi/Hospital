@@ -5,7 +5,8 @@ import axios from "axios";
 export default function Facilities() {
 
     const [facilities, setFacilities] = useState([]);
-    const [facility_id, setId] = useState("");
+    console.log("Facilities are " + facilities);
+
     const [facility_name, setName] = useState("");
     const [facility_desc, setFacility_desc] = useState("");
     const [facility_image, setFacility_image] = useState(null);
@@ -14,25 +15,17 @@ export default function Facilities() {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("facility_id", facility_id);
         formData.append("facility_name", facility_name);
         formData.append("facility_desc", facility_desc);
         formData.append("facility_image", facility_image);
 
         const token = localStorage.getItem("adminToken");
 
-        const payload = {
-            facility_id: facility_id,
-            facility_name: facility_name,
-            facility_desc: facility_desc,
-        };
-
-        console.log(facility_name);
-        console.log(facility_desc);
-        console.log(facility_image);
-        console.log(facilities);
-        
-
+        // const payload = {
+        //     facility_id: facility_id,
+        //     facility_name: facility_name,
+        //     facility_desc: facility_desc,
+        // };
 
 
         try {
@@ -58,15 +51,15 @@ export default function Facilities() {
             .then((res) => setFacilities(res.data))
             .catch((err) => console.error("Error fetching appointments", err));
     }, []);
-    
 
-    // if (facilities.length === 0) {
-    //     return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
-    //         <span className="visually-hidden mr-3">Loading... </span>
-    //         <div className="spinner-border text-danger" role="status" style={{ width: "3rem", height: "3rem" }}>
-    //         </div>
-    //     </div>;
-    // }
+
+    if (facilities.length === 0) {
+        return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
+            <span className="visually-hidden mr-3">Loading... </span>
+            <div className="spinner-border text-danger" role="status" style={{ width: "3rem", height: "3rem" }}>
+            </div>
+        </div>;
+    }
 
     return (
         <>
@@ -104,17 +97,24 @@ export default function Facilities() {
             </div>
 
 
-            <div className="container">
+            <div className="container-fluid">
                 <div className="row">
-                    <div className="col-md-12">
-                        <div className="card">
+                {facilities.map((item) => (
+                        <div className="col-md-4 m-3">
+                            <div className="card">
                             <div className="card-body">
-                                <h5 className="card-title">Cashless Facilities</h5>
-                                <p className="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                                <a href="#" className="btn btn-primary">Go somewhere</a>
+                                <h5 className="card-title">{item.facility_name}</h5>
+                                <p className="card-text" style={{ height: "100px" }}>{item.facility_desc}</p>
+                                {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
+                                <img src={
+                                    item.facility_image
+                                        ? `http://localhost:5000/uploads/${item.facility_image}`
+                                        : "https://via.placeholder.com/150?text=No+Image"
+                                } alt="" />
                             </div>
                         </div>
-                    </div>
+                        </div>
+                ))}
                 </div>
             </div>
         </>
