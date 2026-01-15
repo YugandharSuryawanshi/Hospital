@@ -19,7 +19,7 @@ export default function Slides() {
 
             const token = localStorage.getItem("adminToken");
 
-            const res = await axios.post("http://localhost:5000/api/admin/slides", formData, {
+            const res = await axios.post("http://localhost:4000/api/admin/slides", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`, // add token if route are protected

@@ -8,7 +8,7 @@ export default function Appointments() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:5000/api/admin/appointments")
+            .get("http://localhost:4000/api/admin/appointments")
             .then((res) => setAppointments(res.data))
             .catch((err) => console.error("Error fetching appointments", err));
     }, []);

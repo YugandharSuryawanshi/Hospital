@@ -11,7 +11,7 @@ export default function Doctor() {
     useEffect(() => {
         let mounted = true;
         axios
-            .get("http://localhost:5000/api/admin/getdoctors")
+            .get("http://localhost:4000/api/user/getdoctors")
             .then((res) => {
                 if (mounted) setDrdata(Array.isArray(res.data) ? res.data : []);
             })
@@ -61,7 +61,7 @@ export default function Doctor() {
                                                 <img
                                                     src={
                                                         item.dr_photo
-                                                            ? `http://localhost:5000/uploads/${item.dr_photo}`
+                                                            ? `http://localhost:4000/uploads/${item.dr_photo}`
                                                             : "https://via.placeholder.com/150?text=No+Image"
                                                     }
                                                     alt={item.dr_name || "Doctor"}

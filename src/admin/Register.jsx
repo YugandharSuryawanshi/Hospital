@@ -27,7 +27,7 @@ export default function Register() {
                 formData.append("image", image);
             }
 
-            const res = await axios.post("http://localhost:5000/api/auth/register", formData, {
+            const res = await axios.post("http://localhost:4000/api/auth/register", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
@@ -40,8 +40,6 @@ export default function Register() {
             alert(err.response?.data?.message || "Registration failed");
         }
     };
-    console.log(name, email, password);
-
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">

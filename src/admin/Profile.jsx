@@ -44,7 +44,7 @@ export default function Profile() {
             if (image) formData.append("image", image);
 
             const res = await axios.put(
-                "http://localhost:5000/api/admin/profile",
+                "http://localhost:4000/api/admin/profile",
                 formData,
                 {
                     headers: {
@@ -64,7 +64,7 @@ export default function Profile() {
             alert(err.response?.data?.message || "Profile update failed");
         }
     };
-    const imageUrl = currentImage ? `http://localhost:5000/uploads/${currentImage}` : null;
+    const imageUrl = currentImage ? `http://localhost:4000/uploads/${currentImage}` : null;
 
     return (
         <>

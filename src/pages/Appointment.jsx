@@ -25,7 +25,7 @@ export default function Appointment() {
         }
         let mounted = true;
         axios
-            .get("http://localhost:5000/api/admin/getdoctors")
+            .get("http://localhost:4000/api/admin/getdoctors")
             .then((res) => {
                 if (!mounted) return;
                 const arr = Array.isArray(res.data) ? res.data : [];
@@ -65,7 +65,7 @@ export default function Appointment() {
         };
 
         try {
-            const res = await axios.post("http://localhost:5000/api/user/addAppointment", payload, {
+            const res = await axios.post("http://localhost:4000/api/user/addAppointment", payload, {
                 headers: { "Content-Type": "application/json" },
             });
 
@@ -103,7 +103,7 @@ export default function Appointment() {
                     <div className="card mb-4">
                         <div className="card-body d-flex gap-3 align-items-center">
                             <img
-                                src={doctor.dr_photo ? `http://localhost:5000/uploads/${doctor.dr_photo}` : "https://via.placeholder.com/120?text=No+Image"}
+                                src={doctor.dr_photo ? `http://localhost:4000/uploads/${doctor.dr_photo}` : "https://via.placeholder.com/120?text=No+Image"}
                                 alt={doctor.dr_name}
                                 style={{ width: 120, height: 120, objectFit: "cover", borderRadius: "8px" }}
                                 onError={(e) => (e.currentTarget.src = "https://via.placeholder.com/120")}

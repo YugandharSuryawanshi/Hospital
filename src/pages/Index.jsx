@@ -1,6 +1,9 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Facilities from "./Facilities";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Index() {
     const [index, setIndex] = useState(0);
@@ -10,12 +13,34 @@ export default function Index() {
 
     const [slides, setSlides] = useState([]);
 
+    const navigate = useNavigate();
+    const [drdata, setDrdata] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         axios
-            .get("http://localhost:5000/api/user/slides")
+            .get("http://localhost:4000/api/user/slides")
             .then((res) => setSlides(res.data))
             .catch((err) => console.error("Error fetching slides", err));
+
+            let mounted = true;
+        axios
+            .get("http://localhost:4000/api/admin/getdoctors")
+            .then((res) => {
+                if (mounted) setDrdata(Array.isArray(res.data) ? res.data : []);
+            })
+            .catch((err) => {
+                console.error("Error fetching doctors:", err);
+                if (mounted) setDrdata([]);
+            })
+            .finally(() => mounted && setLoading(false));
+        return () => (mounted = false);
+
     }, []);
+
+    const handleAppointmentClick = (doctor_id) => {
+        navigate(`/appointment?doctor_id=${encodeURIComponent(doctor_id)}`);
+    };
 
     useEffect(() => {
         if (slides.length === 0) return;
@@ -55,7 +80,7 @@ export default function Index() {
                         <AnimatePresence mode="wait">
                             <motion.img
                                 key={index}
-                                src={`http://localhost:5000/${slides[index].slide_image}`}
+                                src={`http://localhost:4000/${slides[index].slide_image}`}
                                 alt="slider"
                                 initial={{ opacity: 0, scale: 1.05 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -126,6 +151,61 @@ export default function Index() {
                     </div>
                 </div>
             </div>
+            
+            {/* Doctors */}
+            <section>
+                <h1 className="text-center font-weight-bold text-danger mt-3">Our Doctors</h1>
+                <div className="container mt-5 pb-5">
+                    {loading ? (
+                        <div className="text-center py-5">Loading doctors...</div>
+                    ) : drdata.length === 0 ? (
+                        <div className="alert alert-warning">No doctors found.</div>
+                    ) : (
+                        <div className="row">
+                            {drdata.map((item) => (
+                                <div className="col-md-6 mt-2" key={item.doctor_id}>
+                                    <div className="card card-body">
+                                        <div className="row align-items-center">
+                                            <div className="col-4">
+                                                <img
+                                                    src={
+                                                        item.dr_photo
+                                                            ? `http://localhost:4000/uploads/${item.dr_photo}`
+                                                            : "https://via.placeholder.com/150?text=No+Image"
+                                                    }
+                                                    alt={item.dr_name || "Doctor"}
+                                                    className="doctor_img rounded-circle w-100"
+                                                    onError={(e) => {
+                                                        e.currentTarget.src = "https://via.placeholder.com/150?text=No+Image";
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <div className="col-8">
+                                                <h3 className="mb-0">{item.dr_name || "—"}</h3>
+                                                <p className="mb-1 text-muted">{item.dr_position || "—"}</p>
+                                                <h6 className="mb-2 text-secondary">{item.dr_certificate}</h6>
+
+                                                <div className="d-flex gap-2">
+                                                    <button className="btn btn-outline-primary btn-sm mr-2">
+                                                        View Profile
+                                                    </button>
+                                                    <button className="btn btn-primary btn-sm"
+                                                        onClick={() => handleAppointmentClick(item.doctor_id)}>
+                                                        Make An Appointment
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </section>
+
+            <Facilities />
         </div>
     );
 }

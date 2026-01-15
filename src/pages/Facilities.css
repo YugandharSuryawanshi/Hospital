@@ -1,0 +1,35 @@
+/* Fixed image container */
+.facility-img-wrapper {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+}
+
+/* Image styling */
+.facility-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* KEY LINE */
+}
+
+/* Description height control */
+/* .facility-desc {
+  height: 150px;
+  overflow: hidden;
+} */
+
+.facility-desc {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.facility-img {
+    transition: transform 0.4s ease;
+}
+
+.facility-img-wrapper:hover .facility-img {
+    transform: scale(1.1);
+}

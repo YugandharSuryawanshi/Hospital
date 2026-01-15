@@ -9,7 +9,7 @@ export default function Login() {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
+    const API = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
     const handleLogin = async (e) => {
         e.preventDefault();

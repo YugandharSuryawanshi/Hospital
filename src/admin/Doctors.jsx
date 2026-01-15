@@ -26,9 +26,9 @@ export default function Doctors() {
 
                 // If endpoint is protected, include token:
                 // const token = localStorage.getItem("adminToken");
-                // const res = await axios.get("http://localhost:5000/api/admin/getdoctors", { headers: { Authorization: `Bearer ${token}` } });
+                // const res = await axios.get("http://localhost:4000/api/admin/getdoctors", { headers: { Authorization: `Bearer ${token}` } });
 
-                const res = await axios.get("http://localhost:5000/api/admin/getdoctors");
+                const res = await axios.get("http://localhost:4000/api/admin/getdoctors");
                 if (!cancelled) {
                     setDoctors(Array.isArray(res.data) ? res.data : []);
                 }
@@ -65,7 +65,7 @@ export default function Doctors() {
         formData.append("dr_photo", drPhoto);
         formData.append("dr_address", drAddress);
 
-        const res = await axios.post("http://localhost:5000/api/admin/doctors", formData, {
+        const res = await axios.post("http://localhost:4000/api/admin/doctors", formData, {
             headers: { "Content-Type": "multipart/form-data", Authorization: `Bearer ${token}`, },
         });
 
@@ -279,7 +279,7 @@ export default function Doctors() {
                                                         <td>
                                                             <img
                                                                 src={
-                                                                    'http://localhost:5000/uploads/' +
+                                                                    'http://localhost:4000/uploads/' +
                                                                     (d.dr_photo ?? d.user_photo ?? '')
                                                                 }
                                                                 alt=""

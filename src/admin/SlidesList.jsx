@@ -9,7 +9,7 @@ export default function SlidesList() {
         console.log('Token is ', token);
 
         axios
-            .get("http://localhost:5000/api/admin/slides")
+            .get("http://localhost:4000/api/admin/slides")
             .then((res) => setSlides(res.data))
             .catch((err) => console.error("Error fetching slides", err));
     }, []);
@@ -22,7 +22,7 @@ export default function SlidesList() {
         if (window.confirm("Are you sure you want to delete this slide?")) {
             try {
                 const token = localStorage.getItem("token");
-                await axios.delete(`http://localhost:5000/api/admin/slides/${id}`, {
+                await axios.delete(`http://localhost:4000/api/admin/slides/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setSlides((prev) => prev.filter((s) => s.slide_id !== id));
@@ -67,7 +67,7 @@ export default function SlidesList() {
                                         <td className="col-md-1">{index + 1}</td>
                                         <td className="col-md-4 text-center">
                                             <img
-                                                src={`http://localhost:5000/${slide.slide_image}`}
+                                                src={`http://localhost:4000/${slide.slide_image}`}
                                                 alt="Slide"
                                                 style={{ width: "150px", height: "auto" }}
                                             />
