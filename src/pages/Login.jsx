@@ -36,7 +36,7 @@ export default function Login() {
                 "http://localhost:4000/api/auth/login",
                 formData
             );
-            login(res.data.token);
+            login(res.data.token, res.data.user);
 
             // Save token
             localStorage.setItem("userToken", res.data.token);

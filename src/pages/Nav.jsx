@@ -1,9 +1,26 @@
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import './Style.css';
 import { useAuth } from "../AuthContex";
+import './Style.css';
 export default function Nav() {
     const navigate = useNavigate();
-    const { isAuth, logout } = useAuth();
+    const { isAuth, user, logout } = useAuth();
+    const [image, setImage] = useState(null);
+    const [name, setName] = useState("");
+
+    useEffect(() => {
+        if (user) {
+            setName(user.user_name || "");
+            setImage(user.user_profile || null);
+        }
+    }, [user]);
+
+    useEffect(() => {
+        if (!logout) {
+            navigate("/", { replace: true });
+        }
+    }, [logout, navigate]);
+
 
     /* LOGOUT */
     const handleLogout = () => {
@@ -11,7 +28,7 @@ export default function Nav() {
         localStorage.removeItem("userUser");
         localStorage.removeItem("userToken");
         alert("Logout successful");
-        navigate("/");
+        navigate("/", { replace: true });
     };
     return (
         <>
@@ -111,20 +128,38 @@ export default function Nav() {
                     <div className="col-md-2 d-md-block justify-content-end">
                         <div className="row">
                             <div>
-                                <button className="btn btn-sm btn-danger mr-2 mb-3">
+                                <button className="btn btn-sm btn-danger mb-3 ml-2">
                                     <NavLink className="nav-link" to="/emergency">Emergency</NavLink>
                                 </button>
                                 {isAuth ? (
                                     // <button className="btn btn-sm color_format_back text-white m-0 mb-3" onClick={handleLogout}>
                                     //     <NavLink className="nav-link">Logout</NavLink>
                                     // </button>
-                                    <button className="btn btn-sm color_format_back text-white nav-item dropdown m-0 mb-3 p-0 ">
+                                    <button className="btn btn-sm  text-white nav-item dropdown m-0 mb-3 p-0 ">
                                         <NavLink className="nav-link " role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Profile
+
+
+                                            <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
+                                                {image ? (
+                                                    <img src={`http://localhost:4000/uploads/${image}`} alt="Profile"
+                                                        className="rounded-circle" style={{ width: "40px", height: "40px", objectFit: "cover" }}
+                                                    />
+                                                ) : (
+                                                    <div className="rounded-circle bg-dark text-white text-center d-flex align-items-center justify-content-center"
+                                                        style={{ width: "40px", height: "40px", fontSize: "30px", fontWeight: "bold" }}
+                                                    >
+                                                        {name?.split(" ").map(word => word[0]).join("").toUpperCase()}
+                                                    </div>
+                                                )}
+                                            </div>
+
+
+
+
                                         </NavLink>
                                         <div className="dropdown-menu">
                                             <NavLink className="dropdown-item" to="/profile">Profile</NavLink>
-                                            <NavLink className="dropdown-item" onClick={handleLogout}>LogOut</NavLink>
+                                            <button type="button" className="dropdown-item bg-white text-dark" onClick={handleLogout}>LogOut</button>
                                         </div>
                                     </button>
                                 ) : (

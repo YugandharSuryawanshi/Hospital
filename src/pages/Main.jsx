@@ -7,8 +7,9 @@ import Facilities from "./Facilities.jsx";
 import Footer from "./Footer";
 import GetAppointment from "./GetAppointment";
 import Index from "./Index.jsx";
-import Nav from "./Nav";
 import Login from "./Login.jsx";
+import Nav from "./Nav";
+import Profile from "./Profile.jsx";
 import Register from "./Register.jsx";
 
 export default function UserMain() {
@@ -19,6 +20,7 @@ export default function UserMain() {
                 <Route path="/" element={<Index />} />
                 <Route path="/register" element={<Register/>} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/doctors" element={<Doctor />} />
                 <Route path="/cashless" element={<Cashless />} />
                 <Route path="/contact" element={<ContactUs />} />
