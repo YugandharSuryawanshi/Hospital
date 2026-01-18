@@ -64,6 +64,26 @@ export default function Navbar() {
                             <b>Facilities</b>
                         </NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/feedbacks">
+                            <i className="fas fa-comments nav-icon"></i>
+                            <b>Feedbacks</b>
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/patients">
+                            <i className="fas fa-hospital-user nav-icon"></i>
+                            <b>Patients</b>
+                        </NavLink>
+                    </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/cashless">
+                            <i className="fas fa-landmark nav-icon"></i>
+                            <b>Insurance & Cashless</b>
+                        </NavLink>
+                    </li>
+
+                    
 
                     <li className="nav-title">Components</li>
                     <li className="nav-group">

@@ -57,49 +57,44 @@ export default function Profile() {
     };
 
     const handleUpdate = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    const data = new FormData();
-    data.append("name", formData.name);
-    data.append("email", formData.email);
-    data.append("phone", formData.phone);
-    data.append("address", formData.address);
+        const data = new FormData();
+        data.append("name", formData.name);
+        data.append("email", formData.email);
+        data.append("phone", formData.phone);
+        data.append("address", formData.address);
 
-    // ⚠️ password optional
-    if (formData.password) {
-        data.append("password", formData.password);
-    }
+        //password optional (if in future need that time help)
+        if (formData.password) {
+            data.append("password", formData.password);
+        }
 
-    // ⚠️ image optional
-    if (image && typeof image !== "string") {
-        data.append("image", image);
-    }
+        //image optional
+        if (image && typeof image !== "string") {
+            data.append("image", image);
+        }
 
-    try {
-        const res = await axios.put(
-            `http://localhost:4000/api/user/updateProfile/${user.user_id}`,
-            data,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
+        try {
+            const res = await axios.put(
+                `http://localhost:4000/api/user/updateProfile/${user.user_id}`,
+                data, { headers: { "Content-Type": "multipart/form-data", }, }
+            );
 
-        setName(res.data.user.user_name);
-        setEmail(res.data.user.user_email);
-        setPhone(res.data.user.user_phone);
-        setAddress(res.data.user.user_address);
-        setImage(res.data.user.user_profile);
+            setName(res.data.user.user_name);
+            setEmail(res.data.user.user_email);
+            setPhone(res.data.user.user_phone);
+            setAddress(res.data.user.user_address);
+            setImage(res.data.user.user_profile);
 
-        setEditMode(false);
-        alert("Profile updated");
+            setEditMode(false);
+            alert("Profile updated");
 
-    } catch (err) {
-        console.error(err);
-        alert("Update failed");
-    }
-};
+        } catch (err) {
+            console.error(err);
+            alert("Update failed");
+        }
+    };
 
 
     return (
@@ -192,8 +187,6 @@ export default function Profile() {
                                         />
                                     </div>
 
-
-
                                     <div className="mb-3">
                                         <label>Profile Image</label>
                                         <input
@@ -204,16 +197,9 @@ export default function Profile() {
                                         />
                                     </div>
 
+                                    <button className="btn btn-success me-2 mr-2"> Update </button>
 
-                                    <button className="btn btn-success me-2 mr-2">
-                                        Update
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary ml-2"
-                                        onClick={() => setEditMode(false)}
-                                    >
+                                    <button type="button" className="btn btn-secondary ml-2" onClick={() => setEditMode(false)}>
                                         Cancel
                                     </button>
                                 </form>

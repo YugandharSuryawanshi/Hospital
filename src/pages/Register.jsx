@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useNavigate, NavLink } from "react-router-dom";
 import axios from "axios";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -11,12 +11,14 @@ export default function Register() {
     const [address, setAddress] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [age, setAge] = useState("");
+    const [gender, setGender] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleRegister = async (e) => {
         e.preventDefault();
 
-        if (!name || !email || !phone || !address || !password) {
+        if (!name || !email || !phone || !address || !password || !age || !gender) {
             alert("All fields are required");
             return;
         }
@@ -35,7 +37,10 @@ export default function Register() {
             formData.append("phone", phone);
             formData.append("address", address);
             formData.append("password", password);
+            formData.append("age", age);
+            formData.append("gender", gender);
             formData.append("role", "user");
+
 
             const res = await axios.post(
                 "http://localhost:4000/api/auth/register",
@@ -111,6 +116,28 @@ export default function Register() {
                                 onChange={(e) => setAddress(e.target.value)}
                                 placeholder="Enter address"
                             />
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+                            <label className="form-label fw-semibold">Age</label>
+                            <input
+                                type="text"
+                                className="form-control form-control-lg"
+                                value={age}
+                                onChange={(e) => setAge(e.target.value)}
+                                placeholder="Enter Age"
+                            />
+                        </div>
+
+                        <div className="col-md-6 mb-3">
+                            <label className="form-label fw-semibold">Gender</label><br />
+                            <select className="form-select w-75 h-50 form-select-lg" value={gender}
+                                onChange={(e) => setGender(e.target.value)} >
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
                         </div>
 
                         <div className="col-md-6 mb-3">

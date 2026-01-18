@@ -105,15 +105,12 @@ export default function Nav() {
                                             <NavLink className="nav-link" to="/facilities">Facilities</NavLink>
                                             <NavLink className="dropdown-item" to="/testimonial">Patient Testimonials</NavLink>
                                             <NavLink className="dropdown-item" to="/gallery">Gallery Page</NavLink>
-                                            <NavLink className="dropdown-item" to="/insurance">Insurance & <br /> Cashless Info</NavLink>
+                                            <NavLink className="dropdown-item" to="/cashless">Insurance & <br /> Cashless Info</NavLink>
                                             <NavLink className="dropdown-item" to="/blog">Blog / Health Tips</NavLink>
                                         </div>
                                     </li>
                                     <li className="nav-item mx-lg-2">
                                         <NavLink className="nav-link" to="/doctors">Doctors</NavLink>
-                                    </li>
-                                    <li className="nav-item mx-lg-2">
-                                        <NavLink className="nav-link" to="/cashless">Cashless</NavLink>
                                     </li>
                                     <li className="nav-item mx-lg-2">
                                         <NavLink className="nav-link" to="/contact">Contact Us</NavLink>
@@ -128,16 +125,13 @@ export default function Nav() {
                     <div className="col-md-2 d-md-block justify-content-end">
                         <div className="row">
                             <div>
-                                <button className="btn btn-sm btn-danger mb-3 ml-2">
-                                    <NavLink className="nav-link" to="/emergency">Emergency</NavLink>
+                                <button className="btn btn-sm btn-danger mb-3 ml-2" >
+                                    {/* Here directly call the number to make a call in emergency */}
+                                    <NavLink className="nav-link" onClick={() => window.location.href = "tel:108"}>Emergency</NavLink>
                                 </button>
                                 {isAuth ? (
-                                    // <button className="btn btn-sm color_format_back text-white m-0 mb-3" onClick={handleLogout}>
-                                    //     <NavLink className="nav-link">Logout</NavLink>
-                                    // </button>
                                     <button className="btn btn-sm  text-white nav-item dropdown m-0 mb-3 p-0 ">
                                         <NavLink className="nav-link " role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-
 
                                             <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
                                                 {image ? (
@@ -154,8 +148,6 @@ export default function Nav() {
                                             </div>
 
 
-
-
                                         </NavLink>
                                         <div className="dropdown-menu">
                                             <NavLink className="dropdown-item" to="/profile">Profile</NavLink>
@@ -163,7 +155,7 @@ export default function Nav() {
                                         </div>
                                     </button>
                                 ) : (
-                                    <button className="btn btn-sm color_format_back text-white m-0 mb-3">
+                                    <button className="btn btn-sm color_format_back text-white m-0 mb-3 ml-2">
                                         <NavLink className="nav-link" to="/login">Login</NavLink>
                                     </button>
                                 )}

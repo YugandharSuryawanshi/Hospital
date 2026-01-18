@@ -1,6 +1,8 @@
 import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Cashless() {
+    const navigate = useNavigate();
     return (
         <>
             <section>
@@ -9,7 +11,7 @@ export default function Cashless() {
                         <div className="col-12 p-0 doctor_page_banner">
                             <h1 className="ml-5 mt-5">Cashless Facility</h1>
                             <ul>
-                                <li className="d-inline-block ml-3">Home</li>
+                                <li className="d-inline-block ml-3" onClick={() => navigate(-1)} >Home</li>
                                 <li className="d-inline-block ml-3"><i class="fa-solid fa-chevron-right"></i></li>
                                 <li className="d-inline-block ml-3">Cashless</li>
                             </ul>
