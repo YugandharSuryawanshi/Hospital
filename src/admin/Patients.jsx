@@ -230,14 +230,9 @@ export default function Patient() {
                                 List
                             </button>
 
-                            <input
-                                type="text"
-                                className=" ml-2 mr-2 form-control form-control-sm"
-                                placeholder="Search ID / Name / Email / Phone / Age"
-                                value={searchTerm}
-                                onChange={(e) => {
-                                    setSearchTerm(e.target.value);
-                                    setCurrentPage(1); // reset page on search
+                            <input type="text" className=" ml-2 mr-2 form-control form-control-sm"
+                                placeholder="Search ID / Name / Email / Phone / Age" value={searchTerm}
+                                onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1); // reset page on search
                                 }}
                             />
 

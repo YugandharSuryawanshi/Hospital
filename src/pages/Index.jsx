@@ -1,8 +1,8 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import Facilities from "./Facilities";
 import { useNavigate } from "react-router-dom";
+import Facilities from "./Facilities";
 
 
 export default function Index() {
@@ -17,6 +17,7 @@ export default function Index() {
     const [drdata, setDrdata] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    // Load/fetch Slides / doctors
     useEffect(() => {
         axios
             .get("http://localhost:4000/api/user/slides")
@@ -25,7 +26,7 @@ export default function Index() {
 
             let mounted = true;
         axios
-            .get("http://localhost:4000/api/admin/getdoctors")
+            .get("http://localhost:4000/api/user/getSomeDoctors")
             .then((res) => {
                 if (mounted) setDrdata(Array.isArray(res.data) ? res.data : []);
             })
@@ -38,10 +39,12 @@ export default function Index() {
 
     }, []);
 
+    // Navigate to appointment page with doctor ID
     const handleAppointmentClick = (doctor_id) => {
         navigate(`/appointment?doctor_id=${encodeURIComponent(doctor_id)}`);
     };
 
+    // Specially for slides
     useEffect(() => {
         if (slides.length === 0) return;
         const timer = setInterval(() => {
@@ -50,14 +53,17 @@ export default function Index() {
         return () => clearInterval(timer);
     }, [slides, totalTime]);
 
+    // Go next Slide
     const nextSlide = () => {
         setIndex((prev) => (prev + 1) % slides.length);
     };
 
+    // came previous slide
     const prevSlide = () => {
         setIndex((prev) => (prev - 1 + slides.length) % slides.length);
     };
 
+    // If no slides available
     if (slides.length === 0) {
         return (
             <div className="container text-center py-5">
