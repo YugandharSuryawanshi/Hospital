@@ -11,6 +11,7 @@ import Register from "./Register";
 import Slides from "./Slides";
 import SlidesList from "./SlidesList";
 import Patient from "./Patients";
+import Departments from "./Departments";
 
 export default function AdminMain() {
     return (
@@ -31,6 +32,7 @@ export default function AdminMain() {
                 <Route path="appointments" element={<Appointments />} />
                 <Route path="facilities" element={<Facilities />} />
                 <Route path="patients" element={<Patient />} />
+                <Route path="departments" element={<Departments />} />
             </Route>
 
             <Route path="/" element={<Navigate to="/admin" replace />} />

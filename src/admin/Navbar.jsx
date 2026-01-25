@@ -82,14 +82,19 @@ export default function Navbar() {
                             <b>Insurance & Cashless</b>
                         </NavLink>
                     </li>
+                    <li className="nav-item">
+                        <NavLink className="nav-link" to="/admin/departments">
+                            <i className="fas fa-sitemap nav-icon"></i>
+                            <b>Departments</b>
+                        </NavLink>
+                    </li>
 
-                    
+
 
                     <li className="nav-title">Components</li>
                     <li className="nav-group">
                         <a
                             className="nav-link nav-group-toggle"
-                            href="#"
                             onClick={() => toggleGroup("base")}
                         >
                             <i className="fas fa-puzzle-piece nav-icon"></i>
@@ -112,7 +117,7 @@ export default function Navbar() {
                     <li className="nav-group">
                         <a
                             className="nav-link nav-group-toggle"
-                            href="#"
+                            NavLink="#"
                             onClick={() => toggleGroup("pages")}
                         >
                             <i className="fas fa-file nav-icon"></i>
@@ -145,7 +150,7 @@ export default function Navbar() {
                         <i className="text-dark fas fa-bars nav-icon"></i>
                     </button>
                     <ul className="header-nav">
-                        <li><a href="#">
+                        <li><a NavLink="#">
                             <i className="fas fa-bell nav-icon text-dark"></i>
                         </a>
                         </li>

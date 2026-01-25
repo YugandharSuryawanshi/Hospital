@@ -28,6 +28,18 @@ export default function Doctors() {
     const [drDepartment, setDrDepartment] = useState("");
     const [drFee, setDrFee] = useState("");
     const [drAbout, setDrAbout] = useState("");
+    const [departments, setDepartments] = useState([]);
+
+    // Fetch Departments
+    const fetchDepartments = async () => {
+        try {
+            const res = await axios.get("http://localhost:4000/api/admin/getDepartments");
+            setDepartments(Array.isArray(res.data) ? res.data : []);
+        } catch (err) {
+            console.error("Error fetching departments:", err);
+        }
+    };
+
 
     /* Fetch doctors */
     const fetchDoctors = async () => {
@@ -41,6 +53,7 @@ export default function Doctors() {
 
     useEffect(() => {
         fetchDoctors();
+        fetchDepartments();
     }, []);
 
     /*Search Filter */
@@ -77,6 +90,10 @@ export default function Doctors() {
 
         if (!drPhoto) {
             alert("Please select a doctor photo");
+            return;
+        }
+        if (!drDepartment) {
+            alert("Please select a department");
             return;
         }
 
@@ -346,11 +363,14 @@ export default function Doctors() {
 
                                 <div className="col-md-6">
                                     <label className="form-label">Select Department</label>
-                                    <select className="form-control" value={drDepartment} onChange={e => setDrDepartment(e.target.value)}>
+                                    <select className="form-control" value={drDepartment}
+                                        onChange={e => setDrDepartment(e.target.value)}>
                                         <option value="">Select Department</option>
-                                        <option value="1">Cardiology</option>
-                                        <option value="2">Gynecology</option>
-                                        <option value="3">Ophthalmology</option>
+                                        {departments.map(dep => (
+                                            <option key={dep.department_id} value={dep.department_id}>
+                                                {dep.department_name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
@@ -541,11 +561,14 @@ export default function Doctors() {
 
                                 <div className="col-md-6">
                                     <label className="form-label">Select Department</label>
-                                    <select className="form-control" value={drDepartment} onChange={e => setDrDepartment(e.target.value)}>
+                                    <select className="form-control" value={drDepartment}
+                                        onChange={e => setDrDepartment(e.target.value)}>
                                         <option value="">Select Department</option>
-                                        <option value="1">Cardiology</option>
-                                        <option value="2">Gynecology</option>
-                                        <option value="3">Ophthalmology</option>
+                                        {departments.map(dep => (
+                                            <option key={dep.department_id} value={dep.department_id}>
+                                                {dep.department_name}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
