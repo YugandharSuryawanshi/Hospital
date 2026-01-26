@@ -29,6 +29,7 @@ export default function Doctors() {
     const [drFee, setDrFee] = useState("");
     const [drAbout, setDrAbout] = useState("");
     const [departments, setDepartments] = useState([]);
+    const [drStatus, setDrStatus] = useState("Active");
 
     // Fetch Departments
     const fetchDepartments = async () => {
@@ -114,6 +115,7 @@ export default function Doctors() {
             formData.append("department_id", drDepartment);
             formData.append("dr_fee", drFee);
             formData.append("dr_about", drAbout);
+            formData.append("dr_status", drStatus);
 
 
             await axios.post(
@@ -143,6 +145,7 @@ export default function Doctors() {
             setDrDepartment("");
             setDrFee("");
             setDrAbout("");
+            setDrStatus("Active");
 
 
             fetchDoctors();
@@ -194,6 +197,7 @@ export default function Doctors() {
         formData.append("department_id", drDepartment);
         formData.append("dr_fee", drFee);
         formData.append("dr_about", drAbout);
+        formData.append("dr_status", drStatus);
 
         try {
             const res = await axios.put(
@@ -374,10 +378,19 @@ export default function Doctors() {
                                     </select>
                                 </div>
 
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="form-label">Fees</label>
                                     <input type="number" className="form-control" placeholder="Consultation Fee"
                                         onChange={e => setDrFee(e.target.value)} />
+                                </div>
+
+                                <div className="col-md-3">
+                                    <label className="form-label">Status</label>
+                                    <select className="form-control" value={drStatus} onChange={e => setDrStatus(e.target.value)}>
+                                        <option value="">Select Doctor Status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
                                 </div>
 
                                 <div className="col-md-6">
@@ -572,10 +585,19 @@ export default function Doctors() {
                                     </select>
                                 </div>
 
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="form-label">Fees</label>
                                     <input type="number" className="form-control" placeholder="Consultation Fee"
                                         onChange={e => setDrFee(e.target.value)} />
+                                </div>
+
+                                <div className="col-md-3">
+                                    <label className="form-label">Status</label>
+                                    <select className="form-control" value={drStatus} onChange={e => setDrStatus(e.target.value)}>
+                                        <option value="">Select Doctor Status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
                                 </div>
 
                                 <div className="col-md-6">
