@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Appointment from "./Appointment.jsx";
 import Cashless from "./Cashless.jsx";
 import ContactUs from "./ContactUs.jsx";
+import Department from "./Department.jsx";
 import Doctor from "./Doctor.jsx";
 import Facilities from "./Facilities.jsx";
 import Footer from "./Footer";
@@ -27,6 +28,7 @@ export default function UserMain() {
                 <Route path="/appointment" element={<Appointment />} />
                 <Route path="/facilities" element={<Facilities />} />
                 <Route path="/getAppointment" element={<GetAppointment />} />
+                <Route path="/department/:id" element={<Department />} />
             </Routes>
             <Footer />
         </>

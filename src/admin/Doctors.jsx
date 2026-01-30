@@ -8,6 +8,7 @@ export default function Doctors() {
     const [searchDrName, setSearchDrName] = useState("");
     const [doctors, setDoctors] = useState([]);
     const [viewMode, setViewMode] = useState("list");
+    const [selectedDoctor, setSelectedDoctor] = useState(null);
 
     // Pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +30,8 @@ export default function Doctors() {
     const [drFee, setDrFee] = useState("");
     const [drAbout, setDrAbout] = useState("");
     const [departments, setDepartments] = useState([]);
-    const [drStatus, setDrStatus] = useState("Active");
+    const [drStatus, setDrStatus] = useState("");
+
 
     // Fetch Departments
     const fetchDepartments = async () => {
@@ -175,6 +177,7 @@ export default function Doctors() {
         setDrDepartment(doctor.department_id);
         setDrFee(doctor.dr_fee);
         setDrAbout(doctor.dr_about);
+        setDrStatus(doctor.dr_status);
 
         setViewMode("edit");
     };
@@ -256,6 +259,18 @@ export default function Doctors() {
         setDrAbout("");
         setViewMode("add");
     }
+
+    // Handle Pop Up
+    const handleShowView = (doctor_id) => {
+        const doctor = doctors.find((d) => d.doctor_id === doctor_id);
+        setSelectedDoctor(doctor);
+        setViewMode("popup");
+    };
+
+    const handleClosePopup = () => {
+        setViewMode("list");
+        setSelectedDoctor(null);
+    };
 
     return (
         <>
@@ -421,16 +436,16 @@ export default function Doctors() {
                 <div className="card">
                     <div className="container-fluid">
                         <div className="table-responsive">
-                            <table className="table table-bordered table-hover align-middle">
+                            <table className="table table-bordered table-hover align-middle text-nowrap">
                                 <thead className="table-dark">
                                     <tr>
                                         <th>Sr No</th>
                                         <th>Name</th>
-                                        <th>Speciality</th>
                                         <th>Position</th>
                                         <th>Contact</th>
                                         <th>Email</th>
                                         <th>Photo</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -443,26 +458,38 @@ export default function Doctors() {
                                         </tr>
                                     ) : (
                                         currentDoctors.map((d, i) => (
-                                            <tr key={d.doctor_id}>
+                                            <tr key={d.doctor_id} onClick={() => handleShowView(d.doctor_id)} style={{ cursor: "pointer" }}>
                                                 <td>{indexOfFirstRecord + i + 1}</td>
                                                 <td>{d.dr_name}</td>
-                                                <td>{d.dr_speciality}</td>
                                                 <td>{d.dr_position}</td>
                                                 <td>{d.dr_contact}</td>
                                                 <td>{d.dr_email}</td>
                                                 <td>
-                                                    <img
-                                                        src={`http://localhost:4000/uploads/${d.dr_photo}`}
-                                                        alt="doctor"
-                                                        width="70"
-                                                        className="rounded"
-                                                    />
+                                                    <img src={d.dr_photo
+                                                        ? `http://localhost:4000/uploads/${d.dr_photo}`
+                                                        : "/no-doctor.png"}
+                                                        alt="doctor" width="60" height="60" className="rounded-circle object-fit-cover" />
                                                 </td>
                                                 <td>
-                                                    <button className="btn btn-warning mr-1" onClick={() => editDoctor(d.doctor_id)} >
+                                                    <span className={`badge px-3 py-2 ${d.dr_status === "Active" ? "bg-success"
+                                                        : "bg-danger"}`} >
+                                                        {d.dr_status}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <button className="btn btn-warning mr-1"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            editDoctor(d.doctor_id);
+                                                        }} >
                                                         <i className="fa fa-edit"></i>
                                                     </button>
-                                                    <button className="btn btn-danger ml-1" onClick={() => deleteDoctor(d.doctor_id)}>
+
+                                                    <button className="btn btn-danger ml-1"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            deleteDoctor(d.doctor_id);
+                                                        }}>
                                                         <i className="fa fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -619,6 +646,56 @@ export default function Doctors() {
                                     </button>
                                 </div>
                             </form>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {viewMode === "popup" && (
+                <div className="doctor-overlay">
+                    <div className="doctor-popup">
+                        <div className="pop">
+                            <div className="col-md-12">
+                                <div className="row">
+                                    <div className="col-md-11">
+                                        <h2 className="text-center">Doctor Details</h2>
+                                        <div style={{ color: "red", width: "50px", height: "1px", borderBottom: "4px solid red" }}></div>
+                                    </div>
+                                    <div className="col-md-1">
+                                        <button className="btn btn-danger" onClick={handleClosePopup}>
+                                            <i className="fa fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-center mb-3">
+                                <img src={selectedDoctor.dr_photo
+                                    ? `http://localhost:4000/uploads/${selectedDoctor.dr_photo}`
+                                    : "/no-doctor.png"
+                                } width="120" height="120" className="rounded-circle" alt="doctor" />
+                            </div>
+
+                            <div className="row">
+                                <div className="col-md-6 mt-1 mb-1"><b>Name:</b> {selectedDoctor.dr_name}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Contact:</b> {selectedDoctor.dr_contact}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Email:</b> {selectedDoctor.dr_email}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Gender:</b> {selectedDoctor.dr_gender}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Speciality:</b> {selectedDoctor.dr_speciality}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Position:</b> {selectedDoctor.dr_position}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Certification:</b>{selectedDoctor.dr_certificate}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Department Name:</b>{selectedDoctor.department_name}</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Experience:</b> {selectedDoctor.dr_experience} years</div>
+                                <div className="col-md-6 mt-1 mb-1"><b>Fee:</b> ₹{selectedDoctor.dr_fee}</div>
+                                <div className="col-12 mt-2"><b>Address:</b> {selectedDoctor.dr_address}</div>
+                                <div className="col-12 mt-2"><b>About:</b> {selectedDoctor.dr_about}</div>
+                            </div>
+
+                            <div className="text-center mt-4">
+                                <button className="btn btn-danger" onClick={handleClosePopup}>
+                                    Close
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

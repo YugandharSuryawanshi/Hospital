@@ -29,8 +29,6 @@ export default function Dashboard() {
                 const appointments = await axios.get("http://localhost:4000/api/admin/appointments");
                 const facilities = await axios.get("http://localhost:4000/api/admin/getAllFacilities");
                 const departments = await axios.get("http://localhost:4000/api/admin/getDepartments");
-                // const feedbacks = await axios.get("http://localhost:4000/api/admin/getfeedbacks");
-                // const cashless = await axios.get("http://localhost:4000/api/admin/getcashless");
 
                 if (!cancelled) {
                     setUsers(Array.isArray(users.data) ? users.data : []);
@@ -38,9 +36,9 @@ export default function Dashboard() {
                     setDoctors(Array.isArray(doctors.data) ? doctors.data : []);
                     setAppointments(Array.isArray(appointments.data) ? appointments.data : []);
                     setFacilities(Array.isArray(facilities.data) ? facilities.data : []);
-                    setFeedbacks(feedbacks.data);
-                    setCashless(cashless.data);
-                    setDepartments(departments.data);
+                    setFeedbacks(Array.isArray(feedbacks.data) ? feedbacks.data : []);
+                    setCashless(Array.isArray(cashless.data) ? cashless.data : []);
+                    setDepartments(Array.isArray(departments.data) ? departments.data : []);
                 }
             } catch (error) {
                 console.log(error);
@@ -162,15 +160,15 @@ export default function Dashboard() {
                     <div className="col-md-4 text-center mt-4">
                         <div className="card">
                             <div className="card-header bg-white border-0">
-                                <h1><i className="fa fa-pen-to-square text-danger"></i></h1>
+                                <h1><i className="fa fa-sitemap text-danger"></i></h1>
                                 <h3 className=" font-weight-bolder text-danger">
-                                    Manage Feedback</h3>
+                                    Manage Departments</h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Feedback : </p>
+                                <p className=' font-weight-bold text-dark '>Total Departments : {departments.length} </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-danger">
-                                    <NavLink className='text-decoration-none text-dark font-weight-bold' to="/admin/feedback">Go To Feedback</NavLink>
+                                    <NavLink className='text-decoration-none text-dark font-weight-bold' to="/admin/departments">Go To Departments</NavLink>
                                 </button>
                             </div>
                         </div>
@@ -196,28 +194,25 @@ export default function Dashboard() {
                     <div className="col-md-4 text-center mt-4">
                         <div className="card">
                             <div className="card-header bg-white border-0">
-                                <h1><i className="fa fa-sitemap text-danger"></i></h1>
+                                <h1><i className="fa fa-pen-to-square text-danger"></i></h1>
                                 <h3 className=" font-weight-bolder text-danger">
-                                    Manage Departments</h3>
+                                    Manage Feedback</h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Departments : {departments.length} </p>
+                                <p className=' font-weight-bold text-dark '>Total Feedback : </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-danger">
-                                    <NavLink className='text-decoration-none text-dark font-weight-bold' to="/admin/departments">Go To Departments</NavLink>
+                                    <NavLink className='text-decoration-none text-dark font-weight-bold' to="/admin/feedback">Go To Feedback</NavLink>
                                 </button>
                             </div>
                         </div>
                     </div>
 
 
-
                 </div>
             </div>
 
             <br /><br />
-
-
         </>
     );
 }

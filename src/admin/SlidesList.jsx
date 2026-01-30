@@ -1,15 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function SlidesList() {
     const [slides, setSlides] = useState([]);
 
     useEffect(() => {
-        const token = localStorage.getItem("adminToken");
-        console.log('Token is ', token);
-
-        axios
-            .get("http://localhost:4000/api/admin/slides")
+        axios.get("http://localhost:4000/api/admin/slides")
             .then((res) => setSlides(res.data))
             .catch((err) => console.error("Error fetching slides", err));
     }, []);
@@ -45,6 +42,14 @@ export default function SlidesList() {
                             </li>
                             <li className="d-inline-block ml-3">Slides List</li>
                         </ul>
+                    </div>
+                    <div className="col-md-8"></div>
+                    <div className="col-md-4">
+                        <div className="d-flex justify-content-end">
+                            <NavLink to="/admin/slides" className="btn btn-warning">
+                                <i className="fa-solid fa-plus"></i>Add Slide
+                            </NavLink>
+                        </div>
                     </div>
                 </div>
             </div>

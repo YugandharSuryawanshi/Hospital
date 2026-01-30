@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContex";
@@ -7,8 +8,13 @@ export default function Nav() {
     const { isAuth, user, logout } = useAuth();
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
+    const [departments, setDepartments] = useState([]);
 
     useEffect(() => {
+        axios.get("http://localhost:4000/api/user/getDepartments").then((res) => {
+            setDepartments(Array.isArray(res.data) ? res.data : []);
+
+        });
         if (user) {
             setName(user.user_name || "");
             setImage(user.user_profile || null);
@@ -88,12 +94,18 @@ export default function Nav() {
                                             Departments
                                         </NavLink>
                                         <div className="dropdown-menu">
-                                            <NavLink className="dropdown-item" to="/cardiology">Cardiology</NavLink>
-                                            <NavLink className="dropdown-item" to="/neurology">Neurology</NavLink>
-                                            <NavLink className="dropdown-item" to="/orthopedics">Orthopedics</NavLink>
-                                            <NavLink className="dropdown-item" to="/pediatrics">Pediatrics</NavLink>
-                                            <NavLink className="dropdown-item" to="/gynecology">Gynecology</NavLink>
-                                            <NavLink className="dropdown-item" to="/ophthalmology">Ophthalmology</NavLink>
+                                            {departments.length > 0 ? (
+                                                departments.map((d) => (
+                                                    <NavLink key={d.department_id} className="dropdown-item"
+                                                        to={`/department/${d.department_id}`}
+                                                    > {d.department_name}
+                                                    </NavLink>
+                                                ))
+                                            ) : (
+                                                <span className="dropdown-item text-muted">
+                                                    No Departments
+                                                </span>
+                                            )}
                                         </div>
                                     </li>
 

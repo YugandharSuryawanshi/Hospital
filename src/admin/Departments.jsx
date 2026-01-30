@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import "./Doctor.css";
 
 export default function Departments() {
 
@@ -104,6 +105,14 @@ export default function Departments() {
         }
     };
 
+    // RESET When go on Add Mode
+    const setAddMode = () => {
+        setDepartmentName("");
+        setDepartmentDesc("");
+        setDepartmentStatus("Active");
+        setViewMode("add");
+    };
+
     // SEARCH
     const filtered = departments.filter(d =>
         d.department_name.toLowerCase().includes(search.toLowerCase())
@@ -117,7 +126,7 @@ export default function Departments() {
             <div className="container text-center py-3 mb-3">
                 <div className="row">
                     <div className="col-md-6">
-                <h2 className="ms-3 text-danger font-weight-bolder">* Departments *</h2>
+                        <h2 className="ms-3 text-danger font-weight-bolder">* Departments *</h2>
                     </div>
                     <div className="col-md-6">
                         <div className="row">
@@ -158,7 +167,7 @@ export default function Departments() {
                         )}
                     </div>
                     <div className="col-md-3">
-                        <button className="btn btn-warning w-100" onClick={() => setViewMode("add")}>
+                        <button className="btn btn-warning w-100" onClick={() => setAddMode()}>
                             Add Department
                         </button>
                     </div>
@@ -241,8 +250,10 @@ export default function Departments() {
                                         </span>
                                     </td>
 
-                                    <td>
-                                        {d.department_description}
+                                    <td style={{ maxWidth: "250px" }}>
+                                        <div className="dept-desc overflow-scroll">
+                                            {d.department_description}
+                                        </div>
                                     </td>
 
                                     <td>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import axios from "axios";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 export default function Slides() {
     const [image, setImage] = useState(null);
@@ -19,13 +20,12 @@ export default function Slides() {
 
             const token = localStorage.getItem("adminToken");
 
-            const res = await axios.post("http://localhost:4000/api/admin/slides", formData, {
+            await axios.post("http://localhost:4000/api/admin/slides", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                     Authorization: `Bearer ${token}`, // add token if route are protected
                 },
             });
-
             alert("Slide added successfully!");
             setImage(null);
             e.target.reset();
@@ -49,6 +49,14 @@ export default function Slides() {
                             </li>
                             <li className="d-inline-block ml-3">Slides</li>
                         </ul>
+                    </div>
+                    <div className="col-md-8"></div>
+                    <div className="col-md-4">
+                        <div className="d-flex justify-content-end">
+                            <NavLink to="/admin/slidelist" className="btn btn-warning">
+                                <i className="fa fa-list"></i> Slides List
+                            </NavLink>
+                        </div>
                     </div>
                 </div>
             </div>
