@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -11,170 +10,215 @@ export default function Appointment() {
     const [doctor, setDoctor] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [name, setName] = useState("");
-    const [contact, setContact] = useState("");
-    const [email, setEmail] = useState("");
-    const [notes, setNotes] = useState("");
-    const [datetime, setDatetime] = useState("");
 
+    const [formData, setFormData] = useState({
+        user_name: "",
+        user_contact: "",
+        user_email: "",
+        user_address: "",
+        appointment_date: "",
+        appointment_time: "",
+        notes: "",
+    });
+
+    /* 🔐 AUTH + DOCTOR FETCH */
     useEffect(() => {
-        console.log('Use Effect is working');
-        
         const token = localStorage.getItem("userToken");
-        console.log('Token is : '+token);
-        
 
-    if (!token) {
-        navigate("/login", {
-            replace: true,
-            state: {
-                from: window.location.pathname + window.location.search
-            }
-        });
-        return;
-    }
+        if (!token) {
+            navigate("/login", {
+                replace: true,
+                state: { from: window.location.pathname + window.location.search },
+            });
+            return;
+        }
+
         if (!doctor_id) {
             setError("No doctor selected.");
             setLoading(false);
             return;
         }
-        let mounted = true;
+
         axios
-            .get("http://localhost:4000/api/admin/getdoctors")
+            .get("http://localhost:4000/api/user/getdoctors")
             .then((res) => {
-                if (!mounted) return;
-                const arr = Array.isArray(res.data) ? res.data : [];
-                const found = arr.find((d) => String(d.doctor_id) === String(doctor_id));
+                const found = res.data.find(
+                    (d) => String(d.doctor_id) === String(doctor_id)
+                );
                 if (found) setDoctor(found);
                 else setError("Doctor not found.");
             })
-            .catch((err) => {
-                console.error("Failed to load doctor:", err);
-                setError("Failed to load doctor data.");
-            })
-            .finally(() => mounted && setLoading(false));
-        return () => (mounted = false);
-    }, [doctor_id]);
+            .catch(() => setError("Failed to load doctor data."))
+            .finally(() => setLoading(false));
+    }, [doctor_id, navigate]);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!name || !contact || !datetime) {
-            alert("Please fill name, contact and date/time");
-            return;
-        }
-
-        // convert "YYYY-MM-DDTHH:MM" => "YYYY-MM-DD HH:MM:SS"
-        let dt = datetime;
-        if (typeof dt === "string" && dt.includes("T")) {
-            dt = dt.replace("T", " ");
-            if (dt.length === 16) dt = dt + ":00";
-        }
-
-        const payload = {
-            doctor_id: doctor?.doctor_id ?? null,
-            user_name: name,
-            user_contact: contact,
-            user_email: email || null,
-            appointment_datetime: dt,
-            notes: notes || null,
-        };
-
-        try {
-            const res = await axios.post("http://localhost:4000/api/user/addAppointment", payload, {
-                headers: { "Content-Type": "application/json" },
-            });
-
-            if (res.status !== 201) {
-                throw new Error("Failed to create appointment.");
-            }
-            alert("Appointment request submitted.");
-
-            // Clear form fields
-            setName("");
-            setContact("");
-            setEmail("");
-            setNotes("");
-            setDatetime("");
-
-            navigate("/doctors");
-        } catch (err) {
-            console.error("Error creating appointment:", err);
-            alert("Failed to create appointment.");
-        }
+    /* 📝 INPUT HANDLER */
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    /* 🚀 SUBMIT */
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const {
+        user_name,
+        user_contact,
+        appointment_date,
+        appointment_time,
+    } = formData;
+
+    if (!user_name || !user_contact || !appointment_date || !appointment_time) {
+        alert("Please fill all required fields.");
+        return;
+    }
+
+    const appointment_datetime = `${appointment_date} ${appointment_time}:00`;
+
+    const payload = {
+        doctor_id,
+        ...formData,
+        appointment_datetime,
+    };
+
+    try {
+        const res = await axios.post(
+            "http://localhost:4000/api/user/addAppointment",
+            payload,
+            { headers: { "Content-Type": "application/json" } }
+        );
+
+        // ✅ SUCCESS MESSAGE
+        alert(res.data.message);
+        navigate("/doctors");
+
+    } catch (err) {
+        if (err.response?.status === 409) {
+            // ❌ SLOT NOT AVAILABLE
+            alert(err.response.data.message);
+        } else {
+            alert("Unable to book appointment. Please try again.");
+        }
+    }
+};
+    /* 🧾 UI */
+    if (loading) return <div className="alert alert-info">Loading...</div>;
+    if (error) return <div className="alert alert-danger">{error}</div>;
+
     return (
-        <>
         <div className="container my-4">
-            <button className="btn btn-outline-danger pr-2 pl-2 mb-3" onClick={() => navigate(-1)}>
-                <i className="fa fa-arrow-left"></i> Back
+            <button className="btn btn-outline-danger mb-3" onClick={() => navigate(-1)}>
+                ← Back
             </button>
 
-            {loading ? (
-                <div className="alert alert-info">Loading doctor details…</div>
-            ) : error ? (
-                <div className="alert alert-danger">{error}</div>
-            ) : (
-                <>
-                    <div className="card mb-4">
-                        <div className="card-body d-flex gap-3 align-items-center">
-                            <img
-                                src={doctor.dr_photo ? `http://localhost:4000/uploads/${doctor.dr_photo}` : "https://via.placeholder.com/120?text=No+Image"}
-                                alt={doctor.dr_name}
-                                style={{ width: 120, height: 120, objectFit: "cover", borderRadius: "8px" }}
-                                onError={(e) => (e.currentTarget.src = "https://via.placeholder.com/120")}
-                            />
-                            <div className="ml-3">
-                                <h3 className="mb-1">{doctor.dr_name}</h3>
-                                <h6 className="mb-1">{doctor.dr_certificate}</h6>
-                                <p className="mb-1 text-muted">{doctor.dr_position}</p>
-                                <p className="mb-0">
-                                    <strong>Speciality:</strong> {doctor.dr_speciality || "—"}
-                                </p>
-                            </div>
-                        </div>
+            {/* DOCTOR CARD */}
+            <div className="card mb-4">
+                <div className="card-body d-flex align-items-center">
+                    <img
+                        src={`http://localhost:4000/uploads/${doctor.dr_photo}`}
+                        alt={doctor.dr_name}
+                        style={{ width: 100, height: 100, borderRadius: "50%" }}
+                    />
+                    <div className="ml-3">
+                        <h4>{doctor.dr_name}</h4>
+                        <p className="mb-1">{doctor.dr_position}</p>
+                        <small>{doctor.dr_speciality}</small>
+                    </div>
+                </div>
+            </div>
+
+            {/* FORM */}
+            <form onSubmit={handleSubmit} className="card p-4 shadow">
+                <div className="row mb-3">
+                    <div className="col-md-6">
+                        <label>Full Name *</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="user_name"
+                            value={formData.user_name}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
 
-                    <div className="card">
-                        <div className="card-body">
-                            <h3 className="card-title">Make an appointment</h3>
-                            <form onSubmit={handleSubmit} className="row g-3">
-                                <div className="col-md-6">
-                                    <label className="form-label">Patient Name</label>
-                                    <input type="text" className="form-control" value={name} onChange={(e) => setName(e.target.value)} required />
-                                </div>
-
-                                <div className="col-md-6">
-                                    <label className="form-label">Contact Number</label>
-                                    <input type="tel" className="form-control" value={contact} onChange={(e) => setContact(e.target.value)} required />
-                                </div>
-
-                                <div className="col-md-6 mt-2">
-                                    <label className="form-label">Email ID</label>
-                                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-
-                                <div className="col-md-6 mt-2">
-                                    <label className="form-label">Preferred Date & Time</label>
-                                    <input type="datetime-local" className="form-control" value={datetime} onChange={(e) => setDatetime(e.target.value)} required />
-                                </div>
-
-                                <div className="col-12 mt-3">
-                                    <label className="form-label">Additional Notes</label>
-                                    <textarea className="form-control" value={notes} onChange={(e) => setNotes(e.target.value)}></textarea>
-                                </div>
-
-                                <div className="col-12 m-4">
-                                    <button className="btn btn-primary" type="submit">
-                                        Request Appointment
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                    <div className="col-md-6">
+                        <label>Mobile *</label>
+                        <input
+                            type="tel"
+                            className="form-control"
+                            name="user_contact"
+                            value={formData.user_contact}
+                            onChange={handleChange}
+                            required
+                        />
                     </div>
-                </>
-            )}
+                </div>
+
+                <div className="row mb-3">
+                    <div className="col-md-6">
+                        <label>Email</label>
+                        <input
+                            type="email"
+                            className="form-control"
+                            name="user_email"
+                            value={formData.user_email}
+                            onChange={handleChange}
+                        />
+                    </div>
+
+                    <div className="col-md-6">
+                        <label>Address</label>
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="user_address"
+                            value={formData.user_address}
+                            onChange={handleChange}
+                        />
+                    </div>
+                </div>
+
+                <div className="row mb-3">
+                    <div className="col-md-6">
+                        <label>Date *</label>
+                        <input
+                            type="date"
+                            className="form-control"
+                            name="appointment_date"
+                            value={formData.appointment_date}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+
+                    <div className="col-md-6">
+                        <label>Time *</label>
+                        <input
+                            type="time"
+                            className="form-control"
+                            name="appointment_time"
+                            value={formData.appointment_time}
+                            onChange={handleChange}
+                            required
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3">
+                    <label>Notes</label>
+                    <textarea
+                        className="form-control"
+                        name="notes"
+                        value={formData.notes}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <button className="btn btn-danger w-100">
+                    Book Appointment
+                </button>
+            </form>
         </div>
-        </>
     );
 }

@@ -1,7 +1,7 @@
 // src/admin/Profile.jsx
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
     const [name, setName] = useState("");

@@ -12,8 +12,6 @@ export default function Profile() {
         setImage(e.target.files[0]);
     };
 
-
-
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -29,9 +27,7 @@ export default function Profile() {
 
     useEffect(() => {
         if (!user?.user_id) return;
-
-        axios
-            .get(`http://localhost:4000/api/user/profile/${user.user_id}`)
+        axios.get(`http://localhost:4000/api/user/profile/${user.user_id}`)
             .then((res) => {
                 setName(res.data.user_name);
                 setEmail(res.data.user_email);
@@ -99,8 +95,24 @@ export default function Profile() {
 
     return (
         <>
-            <h1 className="text-center text-danger m-3">My Profile</h1>
-
+            <div className="container-fluid">
+                <div className="card border-0">
+                    <div className="card-body">
+                        <div className="col-md-12">
+                            <div className="row">
+                                <div className="col-md-12">
+                                    <h1 className="text-center text-danger m-3">My Profile</h1>
+                                </div>
+                                <div className="col-md-8"></div>
+                                <div className="col-md-4">
+                                    <button className="btn btn-warning mr-1">Profile</button>
+                                    <button className="btn btn-danger ml-1">Appointment</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="container">
                 <div className="row">
                     <div className="col-md-3"></div>
