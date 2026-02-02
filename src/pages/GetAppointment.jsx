@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 export default function GetAppointment() {
     const [doctors, setDoctors] = useState([]);
@@ -37,6 +38,12 @@ export default function GetAppointment() {
     /* SUBMIT */
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const token = localStorage.getItem("userToken");
+        if (!token) {
+            alert("Session expired, please log in again.");
+            Navigate("/login");
+            return;
+        }
 
         if (!formData.user_name || !formData.user_contact || !formData.doctor_id) {
             alert("Please fill required fields");
@@ -56,9 +63,15 @@ export default function GetAppointment() {
         };
 
         try {
-            await axios.post("http://localhost:4000/api/user/addAppointment", payload);
-            alert("Appointment booked successfully...");
-
+            const res = await axios.post("http://localhost:4000/api/user/addAppointment", payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                }
+            );
+            alert(res.data.message);
             setFormData({
                 doctor_id: "",
                 user_name: "",
@@ -72,7 +85,7 @@ export default function GetAppointment() {
             });
         } catch (err) {
             console.error(err);
-            alert("Failed to book appointment");
+            alert("Failed to book Appointment Try Later..!");
         }
     };
 

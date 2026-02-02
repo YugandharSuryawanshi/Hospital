@@ -21,7 +21,7 @@ export default function Appointment() {
         notes: "",
     });
 
-    /* 🔐 AUTH + DOCTOR FETCH */
+    // Doctor fetch
     useEffect(() => {
         const token = localStorage.getItem("userToken");
 
@@ -59,48 +59,49 @@ export default function Appointment() {
 
     /* 🚀 SUBMIT */
     const handleSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
+        const token = localStorage.getItem("userToken");
+        console.log('Came Token is :- '+token);
+        const {
+            user_name,
+            user_contact,
+            appointment_date,
+            appointment_time,
+        } = formData;
 
-    const {
-        user_name,
-        user_contact,
-        appointment_date,
-        appointment_time,
-    } = formData;
-
-    if (!user_name || !user_contact || !appointment_date || !appointment_time) {
-        alert("Please fill all required fields.");
-        return;
-    }
-
-    const appointment_datetime = `${appointment_date} ${appointment_time}:00`;
-
-    const payload = {
-        doctor_id,
-        ...formData,
-        appointment_datetime,
-    };
-
-    try {
-        const res = await axios.post(
-            "http://localhost:4000/api/user/addAppointment",
-            payload,
-            { headers: { "Content-Type": "application/json" } }
-        );
-
-        // ✅ SUCCESS MESSAGE
-        alert(res.data.message);
-        navigate("/doctors");
-
-    } catch (err) {
-        if (err.response?.status === 409) {
-            // ❌ SLOT NOT AVAILABLE
-            alert(err.response.data.message);
-        } else {
-            alert("Unable to book appointment. Please try again.");
+        if (!user_name || !user_contact || !appointment_date || !appointment_time) {
+            alert("Please fill all required fields.");
+            return;
         }
-    }
-};
+
+        const payload = {
+            doctor_id,
+            ...formData
+        };
+
+        try {
+            const res = await axios.post(
+                "http://localhost:4000/api/user/addAppointment",
+                payload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+
+            alert(res.data.message);
+            navigate("/doctors");
+
+        } catch (err) {
+            if (err.response?.status === 409) {
+                alert(err.response.data.message);
+            } else {
+                alert("Unable to book appointment. Please try again.");
+            }
+        }
+    };
     /* 🧾 UI */
     if (loading) return <div className="alert alert-info">Loading...</div>;
     if (error) return <div className="alert alert-danger">{error}</div>;

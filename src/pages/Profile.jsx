@@ -7,6 +7,7 @@ export default function Profile() {
     const [phone, setPhone] = useState("");
     const [address, setAddress] = useState("");
     const [image, setImage] = useState(null);
+    const [appointments, setAppointments] = useState([]);
 
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
@@ -21,6 +22,8 @@ export default function Profile() {
     });
 
     const [editMode, setEditMode] = useState(false);
+    const [ProfileMode, setProfileMode] = useState(true);
+    const [appointmentMode, setAppointmentMode] = useState(false);
     const [loading, setLoading] = useState(true);
 
     const user = JSON.parse(localStorage.getItem("userUser") || "null");
@@ -84,11 +87,49 @@ export default function Profile() {
             setImage(res.data.user.user_profile);
 
             setEditMode(false);
-            alert("Profile updated");
+            setProfileMode(true);
+            alert("Profile updated successfully..!");
 
         } catch (err) {
             console.error(err);
             alert("Update failed");
+        }
+    };
+
+    const changeModeProfile = () => {
+        setEditMode(false);
+        setAppointmentMode(false);
+        setProfileMode(true);
+    }
+
+    const changeModeAppointment = () => {
+        setProfileMode(false);
+        setEditMode(false);
+        setAppointmentMode(true);
+        getAllAppointments();
+    }
+
+    const getAllAppointments = async () => {
+        const token = localStorage.getItem("userToken");
+        console.log('Token is :- '+token);
+        
+        try {
+            const res = await axios.get(
+                "http://localhost:4000/api/user/getMyAppointments",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            console.log(res);
+            
+
+            setAppointments(res.data);
+        } catch (err) {
+            console.error(err);
+            alert("Failed to load appointments");
         }
     };
 
@@ -105,8 +146,8 @@ export default function Profile() {
                                 </div>
                                 <div className="col-md-8"></div>
                                 <div className="col-md-4">
-                                    <button className="btn btn-warning mr-1">Profile</button>
-                                    <button className="btn btn-danger ml-1">Appointment</button>
+                                    <button className="btn btn-warning mr-1" onClick={() => changeModeProfile()}>Profile</button>
+                                    <button className="btn btn-danger ml-1" onClick={() => changeModeAppointment()}>Appointment</button>
                                 </div>
                             </div>
                         </div>
@@ -220,6 +261,60 @@ export default function Profile() {
                     </div>
                 </div>
             </div>
+
+
+            {appointmentMode && (
+                <div className="mt-4">
+                    <h4 className="mb-3">My Appointments</h4>
+
+                    {appointments.length === 0 ? (
+                        <div className="alert alert-warning">
+                            No appointments found
+                        </div>
+                    ) : (
+                        <table className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Doctor</th>
+                                    <th>Speciality</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {appointments.map((a, i) => (
+                                    <tr key={a.appointment_id}>
+                                        <td>{i + 1}</td>
+                                        <td>Dr. {a.dr_name}</td>
+                                        <td>{a.dr_speciality}</td>
+                                        <td>{a.appointment_date}</td>
+                                        <td>{a.appointment_time}</td>
+                                        <td>
+                                            {a.status === "Pending" && (
+                                                <span className="badge bg-warning text-dark">
+                                                    Waiting for hospital approval
+                                                </span>
+                                            )}
+                                            {a.status === "Approved" && (
+                                                <span className="badge bg-success">
+                                                    Approved
+                                                </span>
+                                            )}
+                                            {a.status === "Rejected" && (
+                                                <span className="badge bg-danger">
+                                                    Rejected
+                                                </span>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+                </div>
+            )}
         </>
     );
 }
