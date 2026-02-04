@@ -9,11 +9,11 @@ export default function Nav() {
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
     const [departments, setDepartments] = useState([]);
+    
 
     useEffect(() => {
         axios.get("http://localhost:4000/api/user/getDepartments").then((res) => {
             setDepartments(Array.isArray(res.data) ? res.data : []);
-
         });
         if (user) {
             setName(user.user_name || "");
@@ -28,12 +28,12 @@ export default function Nav() {
     }, [logout, navigate]);
 
 
-    /* LOGOUT */
+    // Logout
     const handleLogout = () => {
         logout();
         localStorage.removeItem("userUser");
         localStorage.removeItem("userToken");
-        alert("Logout successful");
+        alert("Logout successfully..!");
         navigate("/", { replace: true });
     };
     return (

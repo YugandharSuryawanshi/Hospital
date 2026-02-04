@@ -21,10 +21,9 @@ export default function Appointment() {
         notes: "",
     });
 
-    // Doctor fetch
+    // Fetch Doctor
     useEffect(() => {
         const token = localStorage.getItem("userToken");
-
         if (!token) {
             navigate("/login", {
                 replace: true,
@@ -34,34 +33,32 @@ export default function Appointment() {
         }
 
         if (!doctor_id) {
-            setError("No doctor selected.");
+            setError("Not Any One Doctor Selected.");
             setLoading(false);
             return;
         }
 
-        axios
-            .get("http://localhost:4000/api/user/getdoctors")
+        axios.get("http://localhost:4000/api/user/getdoctors")
             .then((res) => {
                 const found = res.data.find(
                     (d) => String(d.doctor_id) === String(doctor_id)
                 );
                 if (found) setDoctor(found);
-                else setError("Doctor not found.");
+                else setError("Doctor not found Try later.");
             })
             .catch(() => setError("Failed to load doctor data."))
             .finally(() => setLoading(false));
     }, [doctor_id, navigate]);
 
-    /* 📝 INPUT HANDLER */
+    // Handle Change of input
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    /* 🚀 SUBMIT */
+    // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem("userToken");
-        console.log('Came Token is :- '+token);
         const {
             user_name,
             user_contact,
@@ -102,7 +99,7 @@ export default function Appointment() {
             }
         }
     };
-    /* 🧾 UI */
+    // User Interface
     if (loading) return <div className="alert alert-info">Loading...</div>;
     if (error) return <div className="alert alert-danger">{error}</div>;
 
@@ -112,14 +109,11 @@ export default function Appointment() {
                 ← Back
             </button>
 
-            {/* DOCTOR CARD */}
+            {/* Doctor Card */}
             <div className="card mb-4">
                 <div className="card-body d-flex align-items-center">
-                    <img
-                        src={`http://localhost:4000/uploads/${doctor.dr_photo}`}
-                        alt={doctor.dr_name}
-                        style={{ width: 100, height: 100, borderRadius: "50%" }}
-                    />
+                    <img src={`http://localhost:4000/uploads/${doctor.dr_photo}`} alt={doctor.dr_name}
+                        style={{ width: 100, height: 100, borderRadius: "50%" }} />
                     <div className="ml-3">
                         <h4>{doctor.dr_name}</h4>
                         <p className="mb-1">{doctor.dr_position}</p>
@@ -128,98 +122,60 @@ export default function Appointment() {
                 </div>
             </div>
 
-            {/* FORM */}
+            {/* Form */}
             <form onSubmit={handleSubmit} className="card p-4 shadow">
                 <div className="row mb-3">
                     <div className="col-md-6">
                         <label>Full Name *</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="user_name"
-                            value={formData.user_name}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="text" className="form-control" name="user_name" value={formData.user_name}
+                            onChange={handleChange} required />
                     </div>
 
                     <div className="col-md-6">
                         <label>Mobile *</label>
-                        <input
-                            type="tel"
-                            className="form-control"
-                            name="user_contact"
-                            value={formData.user_contact}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="tel" className="form-control" name="user_contact" value={formData.user_contact}
+                            onChange={handleChange} required />
                     </div>
                 </div>
 
                 <div className="row mb-3">
                     <div className="col-md-6">
                         <label>Email</label>
-                        <input
-                            type="email"
-                            className="form-control"
-                            name="user_email"
-                            value={formData.user_email}
-                            onChange={handleChange}
-                        />
+                        <input type="email" className="form-control" name="user_email" value={formData.user_email}
+                            onChange={handleChange} />
                     </div>
 
                     <div className="col-md-6">
                         <label>Address</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            name="user_address"
-                            value={formData.user_address}
-                            onChange={handleChange}
-                        />
+                        <input type="text" className="form-control" name="user_address" value={formData.user_address}
+                            onChange={handleChange} />
                     </div>
                 </div>
 
                 <div className="row mb-3">
                     <div className="col-md-6">
                         <label>Date *</label>
-                        <input
-                            type="date"
-                            className="form-control"
-                            name="appointment_date"
-                            value={formData.appointment_date}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="date" className="form-control" name="appointment_date" value={formData.appointment_date}
+                            onChange={handleChange} required />
                     </div>
 
                     <div className="col-md-6">
                         <label>Time *</label>
-                        <input
-                            type="time"
-                            className="form-control"
-                            name="appointment_time"
-                            value={formData.appointment_time}
-                            onChange={handleChange}
-                            required
-                        />
+                        <input type="time" className="form-control" name="appointment_time" value={formData.appointment_time}
+                            onChange={handleChange} required />
                     </div>
                 </div>
 
                 <div className="mb-3">
                     <label>Notes</label>
-                    <textarea
-                        className="form-control"
-                        name="notes"
-                        value={formData.notes}
-                        onChange={handleChange}
-                    />
+                    <textarea className="form-control" name="notes" value={formData.notes}
+                        onChange={handleChange} />
                 </div>
 
-                <button className="btn btn-danger w-100">
-                    Book Appointment
-                </button>
+                <button className="btn btn-danger w-100"> Book Appointment </button>
             </form>
+            <br /><br />
+                <p className="text-center text-danger">Note:- Reach Hospital Before 30 minutes of Appointment Time.</p>
         </div>
     );
 }

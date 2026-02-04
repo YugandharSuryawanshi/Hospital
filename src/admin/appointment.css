@@ -1,0 +1,79 @@
+/* === FORCE CENTER TEXT FOR APPOINTMENT TABLE === */
+.responsive-table th,
+.responsive-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* responsive table wrapper: always allow horizontal scroll if needed */
+.responsive-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: transparent;
+}
+
+/* base table styling */
+.responsive-table {
+    width: 100%;
+    min-width: 900px;
+    table-layout: auto;
+}
+
+/* make images inside table fit if you use any */
+.responsive-table img {
+    max-width: 120px;
+    height: auto;
+    display: block;
+    border-radius: 6px;
+}
+
+/* Small screens: convert table to stacked cards for best mobile view */
+@media (max-width: 576px) {
+    .responsive-table {
+        min-width: 0;
+        border: none;
+    }
+
+    .responsive-table thead {
+        display: none;
+    }
+
+    .responsive-table tbody tr {
+        display: block;
+        border: 1px solid #09090a;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 12px;
+        background: #fff;
+    }
+
+    .responsive-table tbody tr td {
+        display: flex;
+        align-items: center;
+        padding: 8px 0;
+        border: none;
+        /* justify-content: space-between; */
+    }
+
+    .responsive-table tbody tr td:last-child {
+        border-bottom: 0;
+    }
+
+    .responsive-table tbody tr td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #333;
+        margin-right: 12px;
+        width: 40%;
+        flex-shrink: 0;
+    }
+
+    .responsive-table tbody tr td {
+        white-space: normal;
+    }
+
+    .responsive-table tbody tr td[data-label="Action"] {
+        justify-content: flex-end;
+    }
+}

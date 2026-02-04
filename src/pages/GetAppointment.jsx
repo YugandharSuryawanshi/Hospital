@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function GetAppointment() {
     const [doctors, setDoctors] = useState([]);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         doctor_id: "",
@@ -41,7 +42,7 @@ export default function GetAppointment() {
         const token = localStorage.getItem("userToken");
         if (!token) {
             alert("Session expired, please log in again.");
-            Navigate("/login");
+            navigate("/login");
             return;
         }
 
