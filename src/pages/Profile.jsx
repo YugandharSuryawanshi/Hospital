@@ -106,11 +106,10 @@ export default function Profile() {
 
     // Simple date format: YYYY-MM-DD → DD-MM-YYYY
     const simpleDate = (date) => {
-        if (!date) return "";
-        const onlyDate = date.split("T")[0]; // 2026-02-24
-        const parts = onlyDate.split("-");
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    };
+    if (!date) return "";
+    const [y, m, d] = date.split("-");
+    return `${d}-${m}-${y}`;
+};
 
     // Simple time format: 24-hour → 12-hour AM/PM
     const simpleTime = (time) => {
@@ -257,9 +256,14 @@ export default function Profile() {
                                                         Approved
                                                     </span>
                                                 )}
-                                                {a.status === "Rejected" && (
+                                                {a.status === "Cancelled" && (
                                                     <span className="badge bg-danger">
                                                         Rejected
+                                                    </span>
+                                                )}
+                                                {a.status === "Complete" && (
+                                                    <span className="badge bg-success">
+                                                        Completed
                                                     </span>
                                                 )}
                                             </td>

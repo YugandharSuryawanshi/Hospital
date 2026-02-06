@@ -1,7 +1,8 @@
-import React, { useState } from "react";
 import axios from "axios";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContex";
+import { toastError, toastSuccess } from "../utils/toast";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ export default function Login() {
         setError("");
 
         if (!formData.email || !formData.password) {
-            setError("Please fill all fields");
+            toastError("Please fill all fields");
             return;
         }
 
@@ -42,7 +43,7 @@ export default function Login() {
             localStorage.setItem("userToken", res.data.token);
             localStorage.setItem("userUser", JSON.stringify(res.data.user));
 
-            alert("Login Successful");
+            toastSuccess("Login successful!");
 
             navigate("/");
 

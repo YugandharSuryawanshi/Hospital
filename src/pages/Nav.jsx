@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContex";
+import socket from '../socket';
+import { toastSuccess } from "../utils/toast";
 import './Style.css';
 export default function Nav() {
     const navigate = useNavigate();
@@ -9,8 +11,12 @@ export default function Nav() {
     const [image, setImage] = useState(null);
     const [name, setName] = useState("");
     const [departments, setDepartments] = useState([]);
-    
 
+    // Notification
+    const [count, setCount] = useState(0);
+    const token = localStorage.getItem("userToken");
+
+    // Get Department And Notification
     useEffect(() => {
         axios.get("http://localhost:4000/api/user/getDepartments").then((res) => {
             setDepartments(Array.isArray(res.data) ? res.data : []);
@@ -19,7 +25,45 @@ export default function Nav() {
             setName(user.user_name || "");
             setImage(user.user_profile || null);
         }
+        if (!token || !user) return;
+
+        axios.get("http://localhost:4000/api/user/notifications", {
+            headers: { Authorization: `Bearer ${token}` }
+        }).then(res => {
+            const unread = res.data.filter(n => n.is_read === 0);
+            setCount(unread.length);
+        });
+
     }, [user]);
+
+    // Socket UseEffect
+    useEffect(() => {
+        if (!token || !user) return;
+
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const userId = payload.user_id;
+
+        socket.connect();
+        socket.emit("join", userId);
+
+        socket.on("new-notification", (data) => {
+            setCount(prev => prev + 1);
+        });
+
+        loadUnreadCount();
+
+        return () => {
+            socket.off("new-notification");
+            socket.disconnect();
+        };
+    }, [token, user]);
+
+    const loadUnreadCount = async () => {
+        const res = await axios.get("http://localhost:4000/api/user/notifications/unread-count",
+            { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setCount(res.data.count);
+    };
 
     useEffect(() => {
         if (!logout) {
@@ -27,15 +71,24 @@ export default function Nav() {
         }
     }, [logout, navigate]);
 
-
     // Logout
     const handleLogout = () => {
+        //Stop socket
+        socket.disconnect();
+
+        setCount(0);
+        setImage(null);
+        setName("");
+
+        //Clear auth
         logout();
         localStorage.removeItem("userUser");
         localStorage.removeItem("userToken");
-        alert("Logout successfully..!");
+
+        toastSuccess("Logout successful!");
         navigate("/", { replace: true });
     };
+
     return (
         <>
             <div className="container-fluid color_format_back d-none d-md-block">
@@ -53,7 +106,17 @@ export default function Nav() {
                             <li className="d-inline-block ml-4 mt-2 text-white"><i className="fa fa-facebook"></i></li>
                             <li className="d-inline-block ml-4 mt-2 text-white"><i className="fa fa-twitter"></i></li>
                             <li className="d-inline-block ml-4 mt-2 text-white"><i className="fa fa-youtube"></i></li>
-                            <li className="d-inline-block ml-4 mt-2 text-white mr-5"><i className="fa fa-bell"></i></li>
+                            {isAuth && (
+                                <li className="d-inline-block ml-4 mt-2 text-white mr-5 position-relative">
+                                    <NavLink className="text-white" to="/notifications" onClick={() => setCount(0)}>
+                                        <i className="fa fa-bell"></i>
+                                        {count > 0 && (
+                                            <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
+                                                {count}
+                                            </span>
+                                        )}
+                                    </NavLink>
+                                </li>)}
                         </ul>
                     </div>
                 </div>
@@ -144,7 +207,6 @@ export default function Nav() {
                                 {isAuth ? (
                                     <button className="btn btn-sm  text-white nav-item dropdown m-0 mb-3 p-0 ">
                                         <NavLink className="nav-link " role="button" data-toggle="dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-
                                             <div className="col-md-5 d-flex flex-column align-items-center justify-content-center">
                                                 {image ? (
                                                     <img src={`http://localhost:4000/uploads/${image}`} alt="Profile"
@@ -158,9 +220,8 @@ export default function Nav() {
                                                     </div>
                                                 )}
                                             </div>
-
-
                                         </NavLink>
+
                                         <div className="dropdown-menu">
                                             <NavLink className="dropdown-item" to="/profile">Profile</NavLink>
                                             <button type="button" className="dropdown-item bg-white text-dark" onClick={handleLogout}>LogOut</button>

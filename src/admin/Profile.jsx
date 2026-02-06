@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import adminAxios from "./adminAxios";
+
 
 export default function Profile() {
     const [name, setName] = useState("");
@@ -43,16 +45,21 @@ export default function Profile() {
             formData.append("email", email);
             if (image) formData.append("image", image);
 
-            const res = await axios.put(
-                "http://localhost:4000/api/admin/profile",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            // const res = await axios.put(
+            //     "http://localhost:4000/api/admin/profile",
+            //     formData,
+            //     {
+            //         headers: {
+            //             "Content-Type": "multipart/form-data",
+            //             Authorization: `Bearer ${token}`,
+            //         },
+            //     }
+            // );
+
+            const res = await adminAxios.put("/profile", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
 
             const updatedUser = res.data.user;
             localStorage.setItem("adminUser", JSON.stringify(updatedUser));
@@ -126,14 +133,14 @@ export default function Profile() {
                             />
                         </div>
 
-                            <div className="mb-4">
-                                <label className="form-label fw-semibold">Profile Image</label>
-                                <input
-                                    type="file"
-                                    className="form-control form-control-lg"
-                                    onChange={(e) => setImage(e.target.files[0])}
-                                />
-                            </div>
+                        <div className="mb-4">
+                            <label className="form-label fw-semibold">Profile Image</label>
+                            <input
+                                type="file"
+                                className="form-control form-control-lg"
+                                onChange={(e) => setImage(e.target.files[0])}
+                            />
+                        </div>
 
                         <div className="d-grid text-center">
                             <button type="submit" className="btn btn-warning btn-lg shadow-sm register-btn">

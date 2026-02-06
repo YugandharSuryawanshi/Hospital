@@ -4,6 +4,7 @@ import autoTable from "jspdf-autotable";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import './appointment.css';
+import { toastSuccess, toastError } from "../utils/toast";
 
 
 export default function Appointments() {
@@ -12,7 +13,7 @@ export default function Appointments() {
 
     // Pagination Code
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5; //can change this
+    const itemsPerPage = 5;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentAppointments = appointments.slice(indexOfFirstItem, indexOfLastItem);
@@ -132,6 +133,34 @@ export default function Appointments() {
     const editAppointment = (appointment) => {
         setSelectedAppointment(appointment);
         setChangeView('edit');
+    };
+
+    // Edit form submit
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        const id = selectedAppointment.appointment_id;
+        const updateData = {
+            appointment_date: selectedAppointment.appointment_date,
+            appointment_time: selectedAppointment.appointment_time,
+            status: selectedAppointment.status,
+            notes: selectedAppointment.notes,
+        };
+
+        try {
+            await axios.put(`http://localhost:4000/api/admin/updateAppointment/${id}`, updateData);
+
+            toastSuccess("Appointment updated successfully!");
+
+            // refresh list
+            const res = await axios.get("http://localhost:4000/api/admin/appointments");
+
+            setAppointments(res.data);
+            setChangeView("list");
+            setSelectedAppointment(null);
+        } catch (err) {
+            console.error(err);
+            toastError("Failed to update appointment.");
+        }
     };
 
     return (
@@ -295,35 +324,7 @@ export default function Appointments() {
                     <div className="card p-4">
                         <h4 className="mb-3">Edit Appointment</h4>
 
-                        <form
-                            onSubmit={async (e) => {
-                                e.preventDefault();
-
-                                try {
-                                    await axios.put(
-                                        `http://localhost:4000/api/admin/updateAppointment/${selectedAppointment.appointment_id}`,
-                                        {
-                                            appointment_date: selectedAppointment.appointment_date,
-                                            appointment_time: selectedAppointment.appointment_time,
-                                            status: selectedAppointment.status,
-                                            notes: selectedAppointment.notes,
-                                        }
-                                    );
-
-                                    alert("Appointment updated successfully");
-
-                                    // refresh list
-                                    const res = await axios.get("http://localhost:4000/api/admin/appointments");
-                                    setAppointments(res.data);
-
-                                    setChangeView("list");
-                                    setSelectedAppointment(null);
-                                } catch (err) {
-                                    console.error(err);
-                                    alert("Failed to update appointment");
-                                }
-                            }}
-                        >
+                        <form onSubmit={handleUpdate}>
                             <div className="row mb-3">
                                 <div className="col-md-6">
                                     <label>Patient Name</label>
@@ -354,7 +355,7 @@ export default function Appointments() {
                                         onChange={(e) =>
                                             setSelectedAppointment({
                                                 ...selectedAppointment,
-                                                appointment_date: e.target.value,
+                                                appointment_date: e.target.value, // YYYY-MM-DD
                                             })
                                         }
                                     />
@@ -389,7 +390,7 @@ export default function Appointments() {
                                     >
                                         <option value="Pending">Pending</option>
                                         <option value="Approved">Approved</option>
-                                        <option value="Rejected">Rejected</option>
+                                        <option value="Cancelled">Rejected</option>
                                         <option value="Complete">Complete</option>
                                     </select>
                                 </div>
@@ -397,9 +398,7 @@ export default function Appointments() {
 
                             <div className="mb-3">
                                 <label>Notes</label>
-                                <textarea
-                                    className="form-control"
-                                    rows="3"
+                                <textarea className="form-control" rows="3"
                                     value={selectedAppointment.notes || ""}
                                     onChange={(e) =>
                                         setSelectedAppointment({
@@ -411,21 +410,17 @@ export default function Appointments() {
                             </div>
 
                             <button className="btn btn-success me-2">Update</button>
-                            <button
-                                type="button"
-                                className="btn btn-secondary ms-2"
+                            <button type="button" className="btn btn-secondary ms-2"
                                 onClick={() => {
                                     setChangeView("list");
                                     setSelectedAppointment(null);
-                                }}
-                            >
+                                }}>
                                 Cancel
                             </button>
                         </form>
                     </div>
                 </section>
             )}
-
 
         </>
     );

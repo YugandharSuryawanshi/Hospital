@@ -12,6 +12,7 @@ import Login from "./Login.jsx";
 import Nav from "./Nav";
 import Profile from "./Profile.jsx";
 import Register from "./Register.jsx";
+import Notifications from "./Notifications.jsx";
 
 export default function UserMain() {
     return (
@@ -29,6 +30,7 @@ export default function UserMain() {
                 <Route path="/facilities" element={<Facilities />} />
                 <Route path="/getAppointment" element={<GetAppointment />} />
                 <Route path="/department/:id" element={<Department />} />
+                <Route path="/notifications" element={<Notifications />} />
             </Routes>
             <Footer />
         </>

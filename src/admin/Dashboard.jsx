@@ -1,54 +1,47 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import adminAxios from "./adminAxios";
+
 
 export default function Dashboard() {
-    const token = localStorage.getItem("adminToken");
     const user = JSON.parse(localStorage.getItem("adminUser") || "null");
-    const [users, setUsers] = useState([]);
-    const [slides, setSlides] = useState([]);
-    const [doctors, setDoctors] = useState([]);
-    const [appointments, setAppointments] = useState([]);
-    const [facilities, setFacilities] = useState([]);
-    const [feedbacks, setFeedbacks] = useState([]);
-    const [cashless, setCashless] = useState([]);
-    const [departments, setDepartments] = useState([]);
+
+    // const [users, setUsers] = useState([]);
+    // const [slides, setSlides] = useState([]);
+    // const [doctors, setDoctors] = useState([]);
+    // const [appointments, setAppointments] = useState([]);
+    // const [facilities, setFacilities] = useState([]);
+    // const [departments, setDepartments] = useState([]);
+    const [counts, setCounts] = useState({
+        users: 0,
+        slides: 0,
+        doctors: 0,
+        appointments: 0,
+        facilities: 0,
+        departments: 0
+    });
+
 
 
     useEffect(() => {
-        let cancelled = false;
-        const fetchDetails = async () => {
-            try {
-                const users = await axios.get("http://localhost:4000/api/admin/getAllUsers", {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                });
-                const slides = await axios.get("http://localhost:4000/api/admin/slides");
-                const doctors = await axios.get("http://localhost:4000/api/admin/getdoctors");
-                const appointments = await axios.get("http://localhost:4000/api/admin/appointments");
-                const facilities = await axios.get("http://localhost:4000/api/admin/getAllFacilities");
-                const departments = await axios.get("http://localhost:4000/api/admin/getDepartments");
+        const token = localStorage.getItem("adminToken");
+        if (!token) return;
 
-                if (!cancelled) {
-                    setUsers(Array.isArray(users.data) ? users.data : []);
-                    setSlides(Array.isArray(slides.data) ? slides.data : []);
-                    setDoctors(Array.isArray(doctors.data) ? doctors.data : []);
-                    setAppointments(Array.isArray(appointments.data) ? appointments.data : []);
-                    setFacilities(Array.isArray(facilities.data) ? facilities.data : []);
-                    setFeedbacks(Array.isArray(feedbacks.data) ? feedbacks.data : []);
-                    setCashless(Array.isArray(cashless.data) ? cashless.data : []);
-                    setDepartments(Array.isArray(departments.data) ? departments.data : []);
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        };
-        fetchDetails();
-        return () => {
-            cancelled = true;
-        };
+        fetchDashboardCounts();
     }, []);
+
+
+    const fetchDashboardCounts = async () => {
+        try {
+            const res = await adminAxios.get("/dashboard-counts");
+            setCounts(res.data.data);
+
+
+        } catch (error) {
+            console.error("Dashboard error:", error);
+        }
+    };
+
 
 
     return (
@@ -79,7 +72,7 @@ export default function Dashboard() {
                                 <h3 className=" font-weight-bolder text-danger">
                                     Manage Patients </h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Patients : {users.length}</p>
+                                <p className=' font-weight-bold text-dark '>Total Patients : {counts.users}</p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-danger">
@@ -96,7 +89,7 @@ export default function Dashboard() {
                                 <h3 className=" font-weight-bolder text-warning">
                                     Manage Slides </h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Slides : {slides.length} </p>
+                                <p className=' font-weight-bold text-dark '>Total Slides : {counts.slides} </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-warning">
@@ -113,7 +106,7 @@ export default function Dashboard() {
                                 <h3 className=" font-weight-bolder text-primary">
                                     Manage Doctors</h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Doctors : {doctors.length} </p>
+                                <p className=' font-weight-bold text-dark '>Total Doctors : {counts.doctors} </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-primary">
@@ -130,7 +123,7 @@ export default function Dashboard() {
                                 <h3 className=" font-weight-bolder text-info">
                                     Manage Appointments</h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Appointments : {appointments.length} </p>
+                                <p className=' font-weight-bold text-dark '>Total Appointments : {counts.appointments} </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-info">
@@ -147,7 +140,7 @@ export default function Dashboard() {
                                 <h3 className=" font-weight-bolder text-dark">
                                     Manage Facilities</h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Facilities : {facilities.length} </p>
+                                <p className=' font-weight-bold text-dark '>Total Facilities : {counts.facilities} </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-dark">
@@ -164,7 +157,7 @@ export default function Dashboard() {
                                 <h3 className=" font-weight-bolder text-danger">
                                     Manage Departments</h3>
                                 <h6 className="text-muted">Add, Update Or Remove</h6>
-                                <p className=' font-weight-bold text-dark '>Total Departments : {departments.length} </p>
+                                <p className=' font-weight-bold text-dark '>Total Departments : {counts.departments} </p>
                             </div>
                             <div className="card-body">
                                 <button className="btn btn-danger">
