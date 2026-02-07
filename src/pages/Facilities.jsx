@@ -5,10 +5,11 @@ import "./Facilities.css";
 export default function Facilities() {
     const [facilities, setFacilities] = useState([]);
     const [expanded, setExpanded] = useState(null);
+    const URL = 'http://localhost:4000/api/user';
+    const imgUrl = 'http://localhost:4000/uploads';
 
     useEffect(() => {
-        axios
-            .get("http://localhost:4000/api/user/getFacilities")
+        axios.get(`${URL}/getFacilities`)
             .then((res) => setFacilities(res.data))
             .catch((err) => console.error(err));
     }, []);
@@ -36,7 +37,7 @@ export default function Facilities() {
                                     <img
                                         src={
                                             facility.facility_image
-                                                ? `http://localhost:4000/uploads/${facility.facility_image}`
+                                                ? `${imgUrl}/${facility.facility_image}`
                                                 : "https://via.placeholder.com/300x200?text=No+Image"
                                         }
                                         alt={facility.facility_name}

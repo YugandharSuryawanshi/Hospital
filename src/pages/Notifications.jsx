@@ -1,27 +1,22 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import userAxios from "./userAxios";
 
 export default function Notifications() {
     const [notifications, setNotifications] = useState([]);
-    const token = localStorage.getItem("userToken");
 
     useEffect(() => {
         loadNotifications();
     }, []);
 
     const loadNotifications = async () => {
-        const res = await axios.get("http://localhost:4000/api/user/notifications",
-            { headers: { Authorization: `Bearer ${token}` } });
+        const res = await userAxios.get("/notifications");
         setNotifications(res.data);
 
-        await axios.put("http://localhost:4000/api/user/notifications/read", {},
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await userAxios.put("/notifications/read", {});
     };
 
     const deleteNotification = async (id) => {
-        await axios.delete(`http://localhost:4000/api/user/deleteNotification/${id}`,
-            { headers: { Authorization: `Bearer ${token}` } });
+        await userAxios.delete(`/deleteNotification/${id}`);
         loadNotifications();
     };
 

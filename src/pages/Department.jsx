@@ -6,6 +6,8 @@ export default function Department() {
     const { id } = useParams(); // department_id
     const [department, setDepartment] = useState(null);
     const [doctors, setDoctors] = useState([]);
+    const ImgUrl = 'http://localhost:4000/uploads';
+    const URL = 'http://localhost:4000/api/user';
 
     useEffect(() => {
         fetchData();
@@ -13,14 +15,10 @@ export default function Department() {
 
     const fetchData = async () => {
         try {
-            const deptRes = await axios.get(
-                `http://localhost:4000/api/user/getDepartment/${id}`
-            );
+            const deptRes = await axios.get(`${URL}/getDepartment/${id}`);
             setDepartment(deptRes.data);
 
-            const doctors = await axios.get(
-                `http://localhost:4000/api/user/getDoctorsByDepartment/${id}`
-            );
+            const doctors = await axios.get(`${URL}/getDoctorsByDepartment/${id}`);
             setDoctors(doctors.data);
         } catch (err) {
             console.error(err);
@@ -53,7 +51,7 @@ export default function Department() {
                             <div className="card-body">
                                 <img
                                     src={d.dr_photo
-                                        ? `http://localhost:4000/uploads/${d.dr_photo}`
+                                        ? `${ImgUrl}/uploads/${d.dr_photo}`
                                         : "/no-doctor.png"}
                                     className="rounded-circle mb-3"
                                     style={{ width: 100, height: 100 }}

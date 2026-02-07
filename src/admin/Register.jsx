@@ -1,6 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { toastError, toastSuccess } from "../utils/toast";
 
 export default function Register() {
     const [name, setName] = useState("");
@@ -13,7 +14,7 @@ export default function Register() {
         e.preventDefault();
 
         if (!name || !email || !password) {
-            alert("All fields are required!");
+            toastError("All fields are required!");
             return;
         }
 
@@ -32,12 +33,12 @@ export default function Register() {
             });
 
             if (res.status === 201) {
-                alert("Registration successful! Please login.");
+                toastSuccess("Registration successful! Please login.");
                 navigate("/admin/login");
             }
         } catch (err) {
             console.error("Registration error:", err.response?.data || err.message);
-            alert(err.response?.data?.message || "Registration failed");
+            toastError(err.response?.data?.message || "Registration failed");
         }
     };
 
@@ -87,12 +88,10 @@ export default function Register() {
 
                     <p className="text-center mt-3 mb-0">
                         Already have an account?{" "}
-                        <span
-                            className="text-primary fw-semibold"
+                        <span className="text-primary fw-semibold"
                             style={{ cursor: "pointer" }}
                             onClick={() => navigate("/admin/login")}
-                        >
-                            Login here
+                        > Login here..
                         </span>
                     </p>
                 </form>

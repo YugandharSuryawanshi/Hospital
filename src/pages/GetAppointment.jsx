@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toastError, toastSuccess } from "../utils/toast";
+import userAxios from "./userAxios";
 
 export default function GetAppointment() {
     const [doctors, setDoctors] = useState([]);
     const navigate = useNavigate();
+    const URL = 'http://localhost:4000/api/user';
 
     const [formData, setFormData] = useState({
         doctor_id: "",
@@ -20,7 +23,7 @@ export default function GetAppointment() {
     /* GET DOCTORS */
     const getDoctors = async () => {
         try {
-            const res = await axios.get("http://localhost:4000/api/user/getdoctors");
+            const res = await axios.get(`${URL}/getdoctors`);
             setDoctors(res.data);
         } catch (err) {
             console.error("Error fetching doctors", err);
@@ -41,13 +44,13 @@ export default function GetAppointment() {
         e.preventDefault();
         const token = localStorage.getItem("userToken");
         if (!token) {
-            alert("Session expired, please log in again.");
+            toastError('Session expired, please log in again.');
             navigate("/login");
             return;
         }
 
         if (!formData.user_name || !formData.user_contact || !formData.doctor_id) {
-            alert("Please fill required fields");
+            toastError("Please fill required fields");
             return;
         }
 
@@ -64,15 +67,15 @@ export default function GetAppointment() {
         };
 
         try {
-            const res = await axios.post("http://localhost:4000/api/user/addAppointment", payload,
+            const res = await userAxios.post("/addAppointment", payload,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json"
                     },
                 }
             );
-            alert(res.data.message);
+            toastSuccess(res.data.message);
+            navigate("/");
             setFormData({
                 doctor_id: "",
                 user_name: "",
@@ -86,7 +89,7 @@ export default function GetAppointment() {
             });
         } catch (err) {
             console.error(err);
-            alert("Failed to book Appointment Try Later..!");
+            toastError("Failed to book Appointment Try Later..!");
         }
     };
 

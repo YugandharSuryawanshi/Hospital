@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import "./Facilities.css";
+import adminAxios from "./adminAxios";
+import { toastSuccess, toastError } from "../utils/toast";
 
 export default function Facilities() {
     const [facilities, setFacilities] = useState([]);
@@ -13,13 +14,10 @@ export default function Facilities() {
     const [editingId, setEditingId] = useState(null);
     const [expanded, setExpanded] = useState(null);
 
-    const token = localStorage.getItem("adminToken");
-
     // Fetch Facilities
     const fetchFacilities = () => {
-        axios
-            .get("http://localhost:4000/api/admin/getAllFacilities")
-            .then((res) => setFacilities(res.data))
+        adminAxios.get("/getAllFacilities").then((res) =>
+            setFacilities(res.data))
             .catch((err) => console.error(err));
     };
 
@@ -46,40 +44,33 @@ export default function Facilities() {
 
             if (editingId) {
                 // UPDATE
-                res = await axios.put(
-                    `http://localhost:4000/api/admin/updateFacility/${editingId}`,
-                    formData,
+                res = await adminAxios.put(`/updateFacility/${editingId}`, formData,
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`,
                             "Content-Type": "multipart/form-data",
                         },
                     }
                 );
             } else {
                 // ADD New
-                res = await axios.post(
-                    "http://localhost:4000/api/admin/addFacility",
-                    formData,
+                res = await adminAxios.post("/addFacility", formData,
                     {
                         headers: {
-                            Authorization: `Bearer ${token}`,
                             "Content-Type": "multipart/form-data",
                         },
                     }
                 );
             }
 
-            alert(res.data.message);
+            toastSuccess(res.data.message);
             resetForm();
             fetchFacilities();
             setActiveView("list");
         } catch (err) {
             console.error(err);
-            alert("Something went wrong");
+            toastError("Something went wrong");
         }
     };
-
 
     // EDIT
     const handleEdit = (item) => {
@@ -92,12 +83,9 @@ export default function Facilities() {
 
     // DELETE
     const handleDelete = (id) => {
-        axios
-            .delete(`http://localhost:4000/api/admin/deleteFacility/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        adminAxios.delete(`/deleteFacility/${id}`)
             .then((res) => {
-                alert(res.data.message);
+                toastSuccess(res.data.message);
                 fetchFacilities();
             })
             .catch((err) => console.error(err));
@@ -111,7 +99,7 @@ export default function Facilities() {
         setFacility_image(null);
     };
 
-    
+
     return (
         <>
             <div className="container mb-4">

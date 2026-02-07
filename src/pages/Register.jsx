@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toastError, toastSuccess } from "../utils/toast";
 
 export default function Register() {
     const navigate = useNavigate();
@@ -19,12 +20,12 @@ export default function Register() {
         e.preventDefault();
 
         if (!name || !email || !phone || !address || !password || !age || !gender) {
-            alert("All fields are required");
+            toastError("All fields are required");
             return;
         }
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match");
+            toastError("Passwords do not match");
             return;
         }
 
@@ -42,20 +43,18 @@ export default function Register() {
             formData.append("role", "user");
 
 
-            const res = await axios.post(
-                "http://localhost:4000/api/auth/register",
-                formData,
+            const res = await axios.post("http://localhost:4000/api/auth/register",formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
 
             if (res.status === 201) {
-                alert("Registration successful! Please login.");
+                toastSuccess("Registration successful! Please login.");
                 navigate("/login");
             }
 
         } catch (err) {
             console.error("Registration error:", err.response?.data || err.message);
-            alert(err.response?.data?.message || "Registration failed");
+            toastError(err.response?.data?.message || "Registration failed");
         } finally {
             setLoading(false);
         }

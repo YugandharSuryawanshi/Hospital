@@ -1,6 +1,8 @@
 import axios from "axios";
+import userAxios from "./userAxios";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { toastError, toastSuccess } from "../utils/toast";
 
 export default function Appointment() {
     const [searchParams] = useSearchParams();
@@ -38,7 +40,7 @@ export default function Appointment() {
             return;
         }
 
-        axios.get("http://localhost:4000/api/user/getdoctors")
+        userAxios.get("/getdoctors")
             .then((res) => {
                 const found = res.data.find(
                     (d) => String(d.doctor_id) === String(doctor_id)
@@ -58,7 +60,6 @@ export default function Appointment() {
     // Submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const token = localStorage.getItem("userToken");
         const {
             user_name,
             user_contact,
@@ -67,7 +68,7 @@ export default function Appointment() {
         } = formData;
 
         if (!user_name || !user_contact || !appointment_date || !appointment_time) {
-            alert("Please fill all required fields.");
+            toastError("Please fill all required fields.");
             return;
         }
 
@@ -77,28 +78,24 @@ export default function Appointment() {
         };
 
         try {
-            const res = await axios.post(
-                "http://localhost:4000/api/user/addAppointment",
-                payload,
+            const res = await userAxios.post("/addAppointment",payload,
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
                         "Content-Type": "application/json",
                     },
                 }
             );
-
-            alert(res.data.message);
+            toastSuccess(res.data.message);
             navigate("/doctors");
-
         } catch (err) {
             if (err.response?.status === 409) {
-                alert(err.response.data.message);
+                toastError(err.response.data.message);
             } else {
-                alert("Unable to book appointment. Please try again.");
+                toastError("Unable to book appointment. Please try again.");
             }
         }
     };
+    
     // User Interface
     if (loading) return <div className="alert alert-info">Loading...</div>;
     if (error) return <div className="alert alert-danger">{error}</div>;

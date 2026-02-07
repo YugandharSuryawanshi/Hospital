@@ -5,13 +5,6 @@ import adminAxios from "./adminAxios";
 
 export default function Dashboard() {
     const user = JSON.parse(localStorage.getItem("adminUser") || "null");
-
-    // const [users, setUsers] = useState([]);
-    // const [slides, setSlides] = useState([]);
-    // const [doctors, setDoctors] = useState([]);
-    // const [appointments, setAppointments] = useState([]);
-    // const [facilities, setFacilities] = useState([]);
-    // const [departments, setDepartments] = useState([]);
     const [counts, setCounts] = useState({
         users: 0,
         slides: 0,
@@ -35,7 +28,6 @@ export default function Dashboard() {
         try {
             const res = await adminAxios.get("/dashboard-counts");
             setCounts(res.data.data);
-
 
         } catch (error) {
             console.error("Dashboard error:", error);
@@ -200,7 +192,6 @@ export default function Dashboard() {
                             </div>
                         </div>
                     </div>
-
 
                 </div>
             </div>

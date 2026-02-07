@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toastSuccess, toastError } from "../utils/toast";
 import { NavLink, useNavigate } from "react-router-dom";
 
 export default function Login() {
@@ -15,7 +16,8 @@ export default function Login() {
         e.preventDefault();
         setError("");
         if (!email || !password) {
-            setError("Email and password are required");
+            toastError("Please fill all fields");
+            setError("Please fill all fields");
             return;
         }
 
@@ -26,12 +28,14 @@ export default function Login() {
 
             // backend must return { token, user: { role, ... } }
             if (!data || !data.token || !data.user) {
+                toastError("Invalid server response");
                 setError("Invalid server response");
                 return;
             }
 
-            // Require admin role for admin panel (adjust if you want different behavior)
+            // Require admin role for admin panel
             if (data.user.role !== "admin") {
+                toastError("Access denied: admin only");
                 setError("Access denied: admin only");
                 return;
             }
@@ -40,8 +44,9 @@ export default function Login() {
             localStorage.setItem("adminToken", data.token);
             localStorage.setItem("adminUser", JSON.stringify(data.user));
 
-            // Redirect to admin root (AdminMain handles protected routes)
+            // Redirect to admin root
             navigate("/admin", { replace: true });
+            toastSuccess("Login successful..!");
         } catch (err) {
             console.error("Login error", err);
             const msg = err.response?.data?.message || err.response?.data?.error || err.message || "Login failed";
@@ -50,9 +55,6 @@ export default function Login() {
             setLoading(false);
         }
     };
-    console.log(email);
-    console.log(password);
-    
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
@@ -90,8 +92,8 @@ export default function Login() {
                         </button>
                     </div>
                     <div className="mt-3">
-                        <NavLink className={"float-left"} href="/admin/forgot-password">Forgot Password?</NavLink>
-                        <NavLink className="float-right" to={"/admin/register"}><span className="text-dark">Not a member?</span> Sign Up</NavLink>
+                        <NavLink className={"float-left"} to="/admin/forgot-password">Forgot Password?</NavLink>
+                        <NavLink className="float-right" to="/admin/register"><span className="text-dark">Not a member?</span> Sign Up</NavLink>
                     </div>
                 </form>
             </div>

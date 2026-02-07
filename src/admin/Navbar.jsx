@@ -6,6 +6,7 @@ export default function Navbar() {
     const user = JSON.parse(localStorage.getItem("adminUser") || "null");
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [openGroups, setOpenGroups] = useState({});
+    const imageURL= 'http://localhost:4000/uploads'
 
     const toggleGroup = (group) => {
         setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }));
@@ -161,7 +162,7 @@ export default function Navbar() {
                                 {user && user.user_profile ? (
                                     // show the image
                                     <img
-                                        src={`http://localhost:4000/uploads/${user.user_profile}`}
+                                        src={`${imageURL}/${user.user_profile}`}
                                         alt="Profile"
                                         style={{
                                             width: 40,

@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { toastError, toastInfo, toastSuccess } from "../utils/toast";
 import "./Doctor.css";
+import adminAxios from "./adminAxios";
 
 export default function Doctors() {
 
@@ -36,20 +37,21 @@ export default function Doctors() {
     // Fetch Departments
     const fetchDepartments = async () => {
         try {
-            const res = await axios.get("http://localhost:4000/api/admin/getDepartments");
+            const res = await adminAxios.get("/getDepartments");
             setDepartments(Array.isArray(res.data) ? res.data : []);
         } catch (err) {
+            toastError("Failed to fetch departments");
             console.error("Error fetching departments:", err);
         }
     };
 
-
     /* Fetch doctors */
     const fetchDoctors = async () => {
         try {
-            const res = await axios.get("http://localhost:4000/api/admin/getdoctors");
+            const res = await adminAxios.get("/getdoctors");
             setDoctors(Array.isArray(res.data) ? res.data : []);
         } catch (err) {
+            toastError("Failed to fetch doctors");
             console.error("Error fetching doctors:", err);
         }
     };
@@ -92,16 +94,15 @@ export default function Doctors() {
         e.preventDefault();
 
         if (!drPhoto) {
-            alert("Please select a doctor photo");
+            toastInfo("Please select a doctor photo");
             return;
         }
         if (!drDepartment) {
-            alert("Please select a department");
+            toastInfo("Please select a department");
             return;
         }
 
         try {
-            const token = localStorage.getItem("adminToken");
             const formData = new FormData();
 
             formData.append("dr_name", drName);
@@ -120,18 +121,15 @@ export default function Doctors() {
             formData.append("dr_status", drStatus);
 
 
-            await axios.post(
-                "http://localhost:4000/api/admin/doctors",
-                formData,
+            await adminAxios.post("/doctors", formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
-                        Authorization: `Bearer ${token}`,
                     },
                 }
             );
 
-            alert("Doctor added successfully!");
+            toastSuccess("Doctor added successfully.");
 
             // Reset form fields after submit
             setDrName("");
@@ -155,7 +153,7 @@ export default function Doctors() {
 
         } catch (error) {
             console.error(error);
-            alert("Something went wrong while adding doctor");
+            toastError("Something went wrong while adding doctor");
         }
     };
 
@@ -185,6 +183,11 @@ export default function Doctors() {
     // Update Doctor
     const handleUpdate = async (e) => {
         e.preventDefault();
+        if (!drDepartment) {
+            toastInfo("Please select a department");
+            return;
+        }
+
         const doctor_id = drID;
         const formData = new FormData();
         formData.append("dr_name", drName);
@@ -203,42 +206,34 @@ export default function Doctors() {
         formData.append("dr_status", drStatus);
 
         try {
-            const res = await axios.put(
-                `http://localhost:4000/api/admin/update_Doctor/${doctor_id}`,
-                formData,
+            const res = await adminAxios.put(`/update_Doctor/${doctor_id}`, formData,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
                         "Content-Type": "multipart/form-data",
                     },
                 }
             );
 
             if (res.status === 200) {
-                alert("Doctor Updated Successfully");
+                toastSuccess("Doctor updated successfully.");
                 fetchDoctors();
                 setViewMode("list");
             }
         } catch (error) {
             console.error(error);
-            alert("Something went wrong while updating doctor");
+            toastError("Something went wrong while updating doctor");
         }
     };
 
     // Delete Doctor
     const deleteDoctor = async (id) => {
         try {
-            const token = localStorage.getItem("adminToken");
-            await axios.delete(`http://localhost:4000/api/admin/deleteDoctor/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            alert("Doctor deleted successfully!");
+            await adminAxios.delete(`/deleteDoctor/${id}`);
+            toastSuccess("Doctor deleted successfully.");
             fetchDoctors();
         } catch (error) {
             console.error(error);
-            alert("Something went wrong while deleting doctor");
+            toastError("Something went wrong while deleting doctor");
         }
     };
 

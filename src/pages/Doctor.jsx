@@ -7,11 +7,13 @@ export default function Doctor() {
     const navigate = useNavigate();
     const [drdata, setDrdata] = useState([]);
     const [loading, setLoading] = useState(true);
+    const URL = 'http://localhost:4000/api/user';
+    const imgUrl = 'http://localhost:4000/uploads';
 
     useEffect(() => {
         let mounted = true;
         axios
-            .get("http://localhost:4000/api/user/getdoctors")
+            .get(`${URL}/getdoctors`)
             .then((res) => {
                 if (mounted) setDrdata(Array.isArray(res.data) ? res.data : []);
             })
@@ -61,7 +63,7 @@ export default function Doctor() {
                                                 <img
                                                     src={
                                                         item.dr_photo
-                                                            ? `http://localhost:4000/uploads/${item.dr_photo}`
+                                                            ? `${imgUrl}/${item.dr_photo}`
                                                             : "https://via.placeholder.com/150?text=No+Image"
                                                     }
                                                     alt={item.dr_name || "Doctor"}

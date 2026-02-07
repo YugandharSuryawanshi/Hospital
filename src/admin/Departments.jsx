@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./Doctor.css";
+import adminAxios from "./adminAxios";
+import { toastError, toastSuccess, toastInfo } from "../utils/toast";
 
 export default function Departments() {
 
@@ -22,7 +24,7 @@ export default function Departments() {
 
     // FETCH
     const fetchDepartments = async () => {
-        const res = await axios.get("http://localhost:4000/api/admin/getDepartments");
+        const res = await adminAxios.get("/getDepartments");
         setDepartments(res.data);
     };
 
@@ -32,31 +34,32 @@ export default function Departments() {
 
     // ADD
     const handleSubmit = async (e) => {
-        const token = localStorage.getItem("adminToken");
-        e.preventDefault();
+    e.preventDefault();
 
-        if (!departmentName || !departmentDesc) {
-            alert("Please fill all fields");
-            return;
-        }
-        const formData = new FormData();
-        formData.append("department_name", departmentName);
-        formData.append("department_desc", departmentDesc);
+    if (!departmentName || !departmentDesc) {
+        toastInfo("Please fill all fields");
+        return;
+    }
 
-        await axios.post("http://localhost:4000/api/admin/addDepartment", formData,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+    const formData = new FormData();
+    formData.append("department_name", departmentName);
+    formData.append("department_desc", departmentDesc);
+
+    try {
+        await adminAxios.post("/addDepartment", formData);
+
+        fetchDepartments();
+        toastSuccess("Department added successfully");
 
         setDepartmentName("");
         setDepartmentDesc("");
-        fetchDepartments();
         setViewMode("list");
-    };
+    } catch (error) {
+        console.error(error);
+        toastError("Failed to add department");
+    }
+};
+
 
     // EDIT
     const editDepartment = (dept) => {
@@ -69,39 +72,30 @@ export default function Departments() {
 
     // UPDATE
     const handleUpdate = async (e) => {
-        e.preventDefault();
+    e.preventDefault();
 
-        const formData = new FormData();
-        formData.append("department_name", departmentName);
-        formData.append("department_desc", departmentDesc);
-        formData.append("department_status", departmentStatus);
-
-        await axios.put(
-            `http://localhost:4000/api/admin/updateDepartment/${editId}`, formData,
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-                },
-            }
-        );
+    try {
+        await adminAxios.put(`/updateDepartment/${editId}`, {
+            department_name: departmentName,
+            department_desc: departmentDesc,
+            department_status: departmentStatus
+        });
 
         fetchDepartments();
+        toastSuccess("Department updated successfully");
         setViewMode("list");
-    };
+    } catch (error) {
+        console.error(error);
+        toastError("Failed to update department");
+    }
+};
 
     // DELETE
     const deleteDepartment = async (id) => {
         if (window.confirm("Delete department?")) {
-            await axios.delete(
-                `http://localhost:4000/api/admin/deleteDepartment/${id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-                    },
-                }
-            );
+            await adminAxios.delete(`/deleteDepartment/${id}`);
             fetchDepartments();
+            toastSuccess("Department deleted successfully..");
         }
     };
 

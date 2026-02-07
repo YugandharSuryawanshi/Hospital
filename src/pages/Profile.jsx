@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toastError, toastSuccess } from "../utils/toast";
+import userAxios from "./userAxios";
 
 export default function Profile() {
     const user = JSON.parse(localStorage.getItem("userUser") || "null");
@@ -14,6 +16,8 @@ export default function Profile() {
     const [showMode, setShowMode] = useState("profile");
     const [loading, setLoading] = useState(true);
 
+    const URL = 'http://localhost:4000/api/user';
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -25,7 +29,7 @@ export default function Profile() {
     useEffect(() => {
         if (!user?.user_id) return;
 
-        axios.get(`http://localhost:4000/api/user/profile/${user.user_id}`)
+        axios.get(`${URL}/profile/${user.user_id}`)
             .then((res) => {
                 setName(res.data.user_name);
                 setEmail(res.data.user_email);
@@ -39,7 +43,6 @@ export default function Profile() {
                     phone: res.data.user_phone,
                     address: res.data.user_address,
                 });
-
                 setLoading(false);
             })
             .catch(() => setLoading(false));
@@ -70,7 +73,7 @@ export default function Profile() {
         }
 
         try {
-            const res = await axios.put(`http://localhost:4000/api/user/updateProfile/${user.user_id}`, data,
+            const res = await axios.put(`${URL}/updateProfile/${user.user_id}`, data,
                 { headers: { "Content-Type": "multipart/form-data" } });
 
             localStorage.setItem("userUser", JSON.stringify(res.data.user));
@@ -82,34 +85,29 @@ export default function Profile() {
             setImage(res.data.user.user_profile);
 
             setShowMode("profile");
-            alert("Profile updated successfully!");
+            toastSuccess("Profile updated successfully!");
 
         } catch (err) {
-            alert("Profile update failed");
+            toastError("Profile update failed...");
         }
     };
 
     // Handle Appointments
     const getAllAppointments = async () => {
-        const token = localStorage.getItem("userToken");
         try {
-            const res = await axios.get("http://localhost:4000/api/user/getMyAppointments",
-                {
-                    headers: { Authorization: `Bearer ${token}` },
-                }
-            );
+            const res = await userAxios.get(`/getMyAppointments`);
             setAppointments(res.data);
         } catch {
-            alert("Failed to load appointments");
+            toastError("Failed to load appointments");
         }
     };
 
     // Simple date format: YYYY-MM-DD → DD-MM-YYYY
     const simpleDate = (date) => {
-    if (!date) return "";
-    const [y, m, d] = date.split("-");
-    return `${d}-${m}-${y}`;
-};
+        if (!date) return "";
+        const [y, m, d] = date.split("-");
+        return `${d}-${m}-${y}`;
+    };
 
     // Simple time format: 24-hour → 12-hour AM/PM
     const simpleTime = (time) => {

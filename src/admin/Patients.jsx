@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { toastError, toastInfo, toastSuccess } from "../utils/toast";
+import adminAxios from "./adminAxios";
 
 export default function Patient() {
     const [patients, setPatients] = useState([]);
@@ -59,24 +61,21 @@ export default function Patient() {
         };
 
         try {
-            const res = await axios.put(
-                `http://localhost:4000/api/admin/updateUser/${user_id}`,
-                payload,
+            const res = await adminAxios.put(`/updateUser/${user_id}`, payload,
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
                         "Content-Type": "application/json",
                     },
                 }
             );
 
             if (res.status === 200) {
-                alert("Patient Updated Successfully");
+                toastSuccess("Patient updated successfully");
                 changeStateList();
             }
         } catch (err) {
             console.error(err);
-            alert("Update failed");
+            toastError("Update failed");
         }
     };
 
@@ -85,12 +84,12 @@ export default function Patient() {
         e.preventDefault();
 
         if (!name || !email || !phone || !address || !password || !age || !gender) {
-            alert("All fields are required");
+            toastInfo("All fields are required");
             return;
         }
 
         if (password !== confirmPassword) {
-            alert("Passwords do not match");
+            toastInfo("Passwords do not match");
             return;
         }
 
@@ -108,20 +107,19 @@ export default function Patient() {
             formData.append("role", "user");
 
 
-            const res = await axios.post(
-                "http://localhost:4000/api/auth/register",
+            const res = await axios.post("http://localhost:4000/api/auth/register",
                 formData,
                 { headers: { "Content-Type": "multipart/form-data" } }
             );
 
             if (res.status === 201) {
-                alert("Patient Added Successfully.");
+                toastSuccess("Patient Added successful!");
                 changeStateList();
             }
 
         } catch (err) {
             console.error("Registration error:", err.response?.data || err.message);
-            alert(err.response?.data?.message || "Registration failed");
+            toastError(err.response?.data?.message || "Registration failed");
         } finally {
             setLoading(false);
         }
@@ -130,12 +128,7 @@ export default function Patient() {
     // Fetch Single Patient Data and put this in fields.
     const handleEditClick = (patient) => {
         setUpdateID(patient);
-        axios.get(`http://localhost:4000/api/admin/getUser/${patient}`, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-            },
-        }).then((res) => {
-            console.log(res.data);
+        adminAxios.get(`/getUser/${patient}`).then((res) => {
             setName(res.data.user_name);
             setEmail(res.data.user_email);
             setPhone(res.data.user_phone);
@@ -144,16 +137,11 @@ export default function Patient() {
             setGender(res.data.user_gender);
             setViewMode("edit");
         })
-
     };
 
     // Fetch/ Get All Patients
     const fetchPatients = async () => {
-        axios.get("http://localhost:4000/api/admin/getAllUsers", {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-            },
-        })
+        adminAxios.get("/getAllUsers")
             .then((res) => {
                 setPatients(res.data);
                 setViewMode("list");
@@ -165,14 +153,9 @@ export default function Patient() {
 
     // Delete Patient
     const handleDelete = (id) => {
-        axios
-            .delete(`http://localhost:4000/api/admin/deleteUser/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
-                },
-            })
+        adminAxios.delete(`/deleteUser/${id}`)
             .then((res) => {
-                alert(res.data.message);
+                toastSuccess(res.data.message);
                 fetchPatients();
             })
             .catch((err) => console.error(err));
@@ -232,7 +215,8 @@ export default function Patient() {
 
                             <input type="text" className=" ml-2 mr-2 form-control form-control-sm"
                                 placeholder="Search ID / Name / Email / Phone / Age" value={searchTerm}
-                                onChange={(e) => {setSearchTerm(e.target.value); setCurrentPage(1); // reset page on search
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value); setCurrentPage(1); // reset page on search
                                 }}
                             />
 

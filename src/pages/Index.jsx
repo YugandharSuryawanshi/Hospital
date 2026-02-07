@@ -17,16 +17,19 @@ export default function Index() {
     const [drdata, setDrdata] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const URL = 'http://localhost:4000/api/user';
+    const imgUrl = 'http://localhost:4000'; //here are not use uploads
+
     // Load/fetch Slides / doctors
     useEffect(() => {
         axios
-            .get("http://localhost:4000/api/user/slides")
+            .get(`${URL}/slides`)
             .then((res) => setSlides(res.data))
             .catch((err) => console.error("Error fetching slides", err));
 
             let mounted = true;
         axios
-            .get("http://localhost:4000/api/user/getSomeDoctors")
+            .get(`${URL}/getSomeDoctors`)
             .then((res) => {
                 if (mounted) setDrdata(Array.isArray(res.data) ? res.data : []);
             })
@@ -74,6 +77,7 @@ export default function Index() {
 
     return (
         <div className="container-fluid p-0">
+            {/* Slider Section */}
             <div className="row m-0">
                 <div className="col-12 p-0">
                     <div
@@ -86,7 +90,7 @@ export default function Index() {
                         <AnimatePresence mode="wait">
                             <motion.img
                                 key={index}
-                                src={`http://localhost:4000/${slides[index].slide_image}`}
+                                src={`${imgUrl}/${slides[index].slide_image}`}
                                 alt="slider"
                                 initial={{ opacity: 0, scale: 1.05 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -176,7 +180,7 @@ export default function Index() {
                                                 <img
                                                     src={
                                                         item.dr_photo
-                                                            ? `http://localhost:4000/uploads/${item.dr_photo}`
+                                                            ? `${imgUrl}/uploads/${item.dr_photo}`
                                                             : "https://via.placeholder.com/150?text=No+Image"
                                                     }
                                                     alt={item.dr_name || "Doctor"}
@@ -211,6 +215,7 @@ export default function Index() {
                 </div>
             </section>
 
+            {/* Facilities */}
             <Facilities />
         </div>
     );

@@ -33,10 +33,7 @@ export default function Login() {
         try {
             setLoading(true);
 
-            const res = await axios.post(
-                "http://localhost:4000/api/auth/login",
-                formData
-            );
+            const res = await axios.post("http://localhost:4000/api/auth/login",formData);
             login(res.data.token, res.data.user);
 
             // Save token

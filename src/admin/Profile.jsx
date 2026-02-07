@@ -1,8 +1,7 @@
-// src/admin/Profile.jsx
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import adminAxios from "./adminAxios";
+import { toastSuccess, toastError, toastInfo } from "../utils/toast";
 
 
 export default function Profile() {
@@ -15,6 +14,7 @@ export default function Profile() {
 
     const user = JSON.parse(localStorage.getItem("adminUser") || "null");
     const id = user ? user.user_id : null;
+    const imageUrl = currentImage ? `http://localhost:4000/uploads/${currentImage}` : null;
 
     useEffect(() => {
         if (user) {
@@ -27,14 +27,14 @@ export default function Profile() {
     const updateProfile = async (e) => {
         e.preventDefault();
         if (!name || !email) {
-            alert("Name and Email are required!");
+            toastError("Name and Email are required!");
             return;
         }
 
         try {
             const token = localStorage.getItem("adminToken");
             if (!token) {
-                alert("Session expired, please log in again.");
+                toastInfo('Session expired, Please log in again.');
                 navigate("/admin/login");
                 return;
             }
@@ -45,17 +45,6 @@ export default function Profile() {
             formData.append("email", email);
             if (image) formData.append("image", image);
 
-            // const res = await axios.put(
-            //     "http://localhost:4000/api/admin/profile",
-            //     formData,
-            //     {
-            //         headers: {
-            //             "Content-Type": "multipart/form-data",
-            //             Authorization: `Bearer ${token}`,
-            //         },
-            //     }
-            // );
-
             const res = await adminAxios.put("/profile", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
@@ -65,13 +54,12 @@ export default function Profile() {
             localStorage.setItem("adminUser", JSON.stringify(updatedUser));
 
             setCurrentImage(updatedUser.user_profile || null);
-            alert("Profile updated successfully!");
+            toastSuccess("Profile updated successfully..!");
         } catch (err) {
             console.error("Profile update error:", err.response?.data || err.message);
-            alert(err.response?.data?.message || "Profile update failed");
+            toastError(err.response?.data?.message || "Profile update failed");
         }
     };
-    const imageUrl = currentImage ? `http://localhost:4000/uploads/${currentImage}` : null;
 
     return (
         <>

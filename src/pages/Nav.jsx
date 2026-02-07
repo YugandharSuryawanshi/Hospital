@@ -5,6 +5,7 @@ import { useAuth } from "../AuthContex";
 import socket from '../socket';
 import { toastSuccess } from "../utils/toast";
 import './Style.css';
+import userAxios from "./userAxios";
 export default function Nav() {
     const navigate = useNavigate();
     const { isAuth, user, logout } = useAuth();
@@ -15,10 +16,11 @@ export default function Nav() {
     // Notification
     const [count, setCount] = useState(0);
     const token = localStorage.getItem("userToken");
+    const URL = 'http://localhost:4000/api/user';
 
     // Get Department And Notification
     useEffect(() => {
-        axios.get("http://localhost:4000/api/user/getDepartments").then((res) => {
+        axios.get(`${URL}/getDepartments`).then((res) => {
             setDepartments(Array.isArray(res.data) ? res.data : []);
         });
         if (user) {
@@ -27,9 +29,7 @@ export default function Nav() {
         }
         if (!token || !user) return;
 
-        axios.get("http://localhost:4000/api/user/notifications", {
-            headers: { Authorization: `Bearer ${token}` }
-        }).then(res => {
+        userAxios.get("/notifications").then(res => {
             const unread = res.data.filter(n => n.is_read === 0);
             setCount(unread.length);
         });
@@ -59,9 +59,7 @@ export default function Nav() {
     }, [token, user]);
 
     const loadUnreadCount = async () => {
-        const res = await axios.get("http://localhost:4000/api/user/notifications/unread-count",
-            { headers: { Authorization: `Bearer ${token}` } }
-        );
+        const res = await userAxios.get("/notifications/unread-count");
         setCount(res.data.count);
     };
 

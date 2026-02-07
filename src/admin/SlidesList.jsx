@@ -1,12 +1,13 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { toastError, toastSuccess } from "../utils/toast";
+import adminAxios from "./adminAxios";
 
 export default function SlidesList() {
     const [slides, setSlides] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:4000/api/admin/slides")
+        adminAxios.get("/slides")
             .then((res) => setSlides(res.data))
             .catch((err) => console.error("Error fetching slides", err));
     }, []);
@@ -18,13 +19,12 @@ export default function SlidesList() {
     const deleteSlide = async (id) => {
         if (window.confirm("Are you sure you want to delete this slide?")) {
             try {
-                const token = localStorage.getItem("token");
-                await axios.delete(`http://localhost:4000/api/admin/slides/${id}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                await adminAxios.delete(`/slides/${id}`);
+                toastSuccess("Slide deleted successfully");
                 setSlides((prev) => prev.filter((s) => s.slide_id !== id));
             } catch (err) {
                 console.error(err);
+                toastError("Error deleting slide");
             }
         }
     };

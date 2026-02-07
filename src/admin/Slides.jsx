@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { toastError, toastSuccess } from "../utils/toast";
+import adminAxios from "./adminAxios";
 
 export default function Slides() {
     const [image, setImage] = useState(null);
@@ -10,7 +11,7 @@ export default function Slides() {
         e.preventDefault();
 
         if (!image) {
-            alert("Please select an image first");
+            toastError("Please select an image first");
             return;
         }
 
@@ -18,20 +19,17 @@ export default function Slides() {
             const formData = new FormData();
             formData.append("slideImage", image); // must match upload.single("slideImage")
 
-            const token = localStorage.getItem("adminToken");
-
-            await axios.post("http://localhost:4000/api/admin/slides", formData, {
+            await adminAxios.post("/slides", formData, {
                 headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${token}`, // add token if route are protected
+                    "Content-Type": "multipart/form-data"
                 },
             });
-            alert("Slide added successfully!");
+            toastSuccess("Slide added successfully!");
             setImage(null);
             e.target.reset();
         } catch (err) {
             console.error(err);
-            alert("Error uploading slide");
+            toastError("Error uploading slide");
         }
     };
 

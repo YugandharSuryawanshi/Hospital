@@ -1,10 +1,10 @@
-import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
+import { toastError, toastSuccess } from "../utils/toast";
+import adminAxios from "./adminAxios";
 import './appointment.css';
-import { toastSuccess, toastError } from "../utils/toast";
 
 
 export default function Appointments() {
@@ -34,10 +34,14 @@ export default function Appointments() {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:4000/api/admin/appointments")
+        adminAxios.get("/appointments")
             .then((res) => setAppointments(res.data))
-            .catch((err) => console.error("Error fetching appointments", err));
+            .catch((err) => {
+                console.error("Error fetching appointments", err);
+                toastError("Failed to load appointments");
+            });
     }, []);
+
 
     if (appointments.length === 0) {
         return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "200px" }}>
@@ -147,12 +151,11 @@ export default function Appointments() {
         };
 
         try {
-            await axios.put(`http://localhost:4000/api/admin/updateAppointment/${id}`, updateData);
+            await adminAxios.put(`/updateAppointment/${id}`, updateData);
 
             toastSuccess("Appointment updated successfully!");
 
-            // refresh list
-            const res = await axios.get("http://localhost:4000/api/admin/appointments");
+            const res = await adminAxios.get("/appointments");
 
             setAppointments(res.data);
             setChangeView("list");
