@@ -235,7 +235,7 @@ export default function Profile() {
                                     {appointments.map((a, i) => (
                                         <tr key={a.appointment_id}>
                                             <td>{i + 1}</td>
-                                            <td>Dr. {a.dr_name}</td>
+                                            <td>{a.dr_name}</td>
 
                                             {/* Print Date */}
                                             <td>{simpleDate(a.appointment_date)}</td>
