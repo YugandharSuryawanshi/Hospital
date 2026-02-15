@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { toastError, toastSuccess } from "../utils/toast";
 import userAxios from "./userAxios";
 
@@ -92,33 +93,6 @@ export default function Profile() {
         }
     };
 
-    // Handle Appointments
-    const getAllAppointments = async () => {
-        try {
-            const res = await userAxios.get(`/getMyAppointments`);
-            setAppointments(res.data);
-        } catch {
-            toastError("Failed to load appointments");
-        }
-    };
-
-    // Simple date format: YYYY-MM-DD → DD-MM-YYYY
-    const simpleDate = (date) => {
-        if (!date) return "";
-        const [y, m, d] = date.split("-");
-        return `${d}-${m}-${y}`;
-    };
-
-    // Simple time format: 24-hour → 12-hour AM/PM
-    const simpleTime = (time) => {
-        if (!time) return "";
-        let [hour, minute] = time.split(":");
-        hour = parseInt(hour);
-        const ampm = hour >= 12 ? "PM" : "AM";
-        hour = hour % 12 || 12;
-        return `${hour}:${minute} ${ampm}`;
-    };
-
     return (
         <>
             <div className="container-fluid">
@@ -132,10 +106,7 @@ export default function Profile() {
                                 <div className="col-md-8"></div>
                                 <div className="col-md-4">
                                     <button className="btn btn-warning mr-1" onClick={() => setShowMode("profile")}>Profile</button>
-                                    <button className="btn btn-danger ml-1" onClick={() => {
-                                        setShowMode("appointments");
-                                        getAllAppointments();
-                                    }}>Appointment</button>
+                                    <button className="btn btn-danger ml-1"> <NavLink to="/yourAppointment" className="text-decoration-none text-white">Your Appointments</NavLink> </button>
                                 </div>
                             </div>
                         </div>
@@ -205,71 +176,6 @@ export default function Profile() {
                             <button className="btn btn-success me-2 mr-2"> Update </button>
                             <button type="button" className="btn btn-secondary ml-2" onClick={() => setShowMode("profile")}> Cancel </button>
                         </form>
-                    </div>
-                </div>
-            )}
-
-            {/* Appointments */}
-            {showMode === "appointments" && (
-                <div className="container mt-4">
-                    <div className="card p-4 border-0 shadow">
-                        <h4 className=" text-danger mb-3">My Appointments</h4>
-
-                        {appointments.length === 0 ? (
-                            <div className="alert alert-warning text-center">
-                                No appointments found
-                            </div>
-                        ) : (
-                            <table className="table table-bordered text-center">
-                                <thead className="table-dark">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Doctor</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {appointments.map((a, i) => (
-                                        <tr key={a.appointment_id}>
-                                            <td>{i + 1}</td>
-                                            <td>{a.dr_name}</td>
-
-                                            {/* Print Date */}
-                                            <td>{simpleDate(a.appointment_date)}</td>
-
-                                            {/* Print Time */}
-                                            <td>{simpleTime(a.appointment_time)}</td>
-
-                                            <td>
-                                                {a.status === "Pending" && (
-                                                    <span className="badge bg-warning text-dark">
-                                                        Waiting for hospital approval
-                                                    </span>
-                                                )}
-                                                {a.status === "Approved" && (
-                                                    <span className="badge bg-success">
-                                                        Approved
-                                                    </span>
-                                                )}
-                                                {a.status === "Cancelled" && (
-                                                    <span className="badge bg-danger">
-                                                        Rejected
-                                                    </span>
-                                                )}
-                                                {a.status === "Complete" && (
-                                                    <span className="badge bg-success">
-                                                        Completed
-                                                    </span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
                     </div>
                 </div>
             )}

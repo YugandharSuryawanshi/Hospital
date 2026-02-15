@@ -79,16 +79,75 @@
 
 /* Navbar styling ends */
 
-.doctor_page_banner{
+.doctor_page_banner {
     background-image: url('../../public/images/doctor_background_image.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
     height: 220px;
 }
+
 @media (max-width: 992px) {
-    .doctor_page_banner{
+    .doctor_page_banner {
         height: 200px;
         width: 100%;
     }
+}
+
+
+
+
+/* For Print Receipt Only */
+@media print {
+
+    body * {
+        visibility: hidden;
+    }
+
+    #receipt,
+    #receipt * {
+        visibility: visible;
+    }
+
+    #receipt {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    button {
+        display: none !important;
+    }
+}
+
+
+
+
+/* Your Appointment Card */
+.appointment-card {
+    transition: all 0.25s ease;
+    border-left: 5px solid #dc3545;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.appointment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.paid{
+    color: green;
+    font-weight: 500;
+}
+
+.pending{
+    color: orange;
+    font-weight: 500;
+}
+
+.failed{
+    color: red;
+    font-weight: 500;
 }
