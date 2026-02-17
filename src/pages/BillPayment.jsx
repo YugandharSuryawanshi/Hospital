@@ -114,6 +114,29 @@ export default function BillPayment() {
         return `${h}:${minute} ${ampm}`;
     };
 
+    //Handle Cancel Appointment
+    const handleCancelAppointment = async () => {
+        const confirm = window.confirm("Are you sure to cancel this appointment?");
+        if (!confirm) return;
+        try {
+            const { data } = await paymentAxios.post("/cancel-appointment", {
+                bill_id
+            });
+
+            if (data.success) {
+                toastSuccess("Appointment cancelled & refund processed");
+                navigate("/yourAppointment");
+            } else {
+                toastError(data.message || "Cancellation failed");
+            }
+
+        } catch (err) {
+            console.log(err);
+            toastError("Server error while cancelling");
+        }
+    };
+
+
 
     if (loading) return <div className="alert alert-info">Loading...</div>;
     if (!bill) return null;
@@ -139,12 +162,23 @@ export default function BillPayment() {
                             </small>
                         </div>
 
-                        <div>
+                        <div className="text-end">
                             <span className={`badge fs-6 ${bill.bill_status === "paid" ? "bg-success" : "bg-warning text-dark"}`}>
                                 {bill.bill_status}
                             </span>
+
+                            {/* Cancel Button */}
+                            {bill.bill_status !== "cancelled" && (
+                                <div>
+                                    <button className="btn btn-sm btn-outline-danger mt-2"
+                                        onClick={handleCancelAppointment}>
+                                        Cancel Appointment
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
+
 
                     <hr />
 
@@ -223,7 +257,7 @@ export default function BillPayment() {
                     </div>
 
                     {/* Buttons */}
-                    {bill.bill_status !== "paid" && bill.payment_mode === "online" && (
+                    {bill.bill_status !== "paid" && bill.payment_mode === "online" && bill.bill_status !== "cancelled" && (
                         <button className="btn btn-danger w-100 mt-4" onClick={handlePayment}>
                             Pay Now
                         </button>

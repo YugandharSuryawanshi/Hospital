@@ -12,7 +12,7 @@ export default function YourAppointment() {
         getAllAppointments();
     }, []);
 
-    // Handle Appointments
+    // Get all appointments
     const getAllAppointments = async () => {
         try {
             const res = await userAxios.get(`/getMyAppointments`);
@@ -177,14 +177,12 @@ export default function YourAppointment() {
                                             </div>
 
                                             <div className="extra-info">
-                                                <div>Token No : <b><b>{a.token_number || "Not Assigned"}</b>
-                                                </b></div>
+                                                <div>Your Number : <b>{a.token_number || "Not Assigned"}</b></div>
                                                 <div>
                                                     Payment :
                                                     <span className={getPaymentClass(a.payment_status)}>
                                                         {a.payment_status || "Pending"}
                                                     </span>
-
                                                 </div>
                                             </div>
 
