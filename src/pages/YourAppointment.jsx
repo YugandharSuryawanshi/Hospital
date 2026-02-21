@@ -150,6 +150,11 @@ export default function YourAppointment() {
                                                             Completed
                                                         </span>
                                                     )}
+                                                    {a.status === 'No_show' && (
+                                                        <span className="badge bg-danger">
+                                                            Appointment Missed
+                                                        </span>
+                                                    )}
                                                 </div>
                                             </div>
 

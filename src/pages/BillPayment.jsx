@@ -11,6 +11,8 @@ export default function BillPayment() {
     const { bill_id } = useParams();
     const [bill, setBill] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [agree, setAgree] = useState(false);
+
 
     //Getting Bill details
     useEffect(() => {
@@ -137,7 +139,6 @@ export default function BillPayment() {
     };
 
 
-
     if (loading) return <div className="alert alert-info">Loading...</div>;
     if (!bill) return null;
 
@@ -168,7 +169,7 @@ export default function BillPayment() {
                             </span>
 
                             {/* Cancel Button */}
-                            {bill.bill_status !== "cancelled" && (
+                            {bill.bill_status === "paid" && bill.appointment_status === "Approved" && (
                                 <div>
                                     <button className="btn btn-sm btn-outline-danger mt-2"
                                         onClick={handleCancelAppointment}>
@@ -178,7 +179,6 @@ export default function BillPayment() {
                             )}
                         </div>
                     </div>
-
 
                     <hr />
 
@@ -256,9 +256,20 @@ export default function BillPayment() {
                         </div>
                     </div>
 
+                    {/* Agree Section */}
+                    {bill.bill_status !== "paid" && bill.bill_status !== "cancelled" && bill.payment_mode === "online" &&(
+                        <div className="form-check mt-3">
+                            <input className="form-check-input" type="checkbox" checked={agree}
+                                onChange={(e) => setAgree(e.target.checked)} />
+                            <label className="form-check-label">
+                                I understand that no refund will be provided for (no-show) <b>missed</b> appointments.
+                            </label>
+                        </div>
+                    )}
+
                     {/* Buttons */}
                     {bill.bill_status !== "paid" && bill.payment_mode === "online" && bill.bill_status !== "cancelled" && (
-                        <button className="btn btn-danger w-100 mt-4" onClick={handlePayment}>
+                        <button className="btn btn-danger w-100 mt-4" onClick={handlePayment} disabled={!agree}>
                             Pay Now
                         </button>
                     )}
