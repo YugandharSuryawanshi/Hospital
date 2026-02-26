@@ -166,6 +166,17 @@ export default function Appointments() {
         }
     };
 
+    // Time
+    // 24 → 12 hour
+    const simpleTime = (time) => {
+        if (!time) return "";
+        let [hour, minute] = time.split(":");
+        hour = parseInt(hour);
+        const ampm = hour >= 12 ? "PM" : "AM";
+        hour = hour % 12 || 12;
+        return `${hour}:${minute} ${ampm}`;
+    };
+
     return (
         <>
             {changeView === 'list' && (
@@ -262,10 +273,10 @@ export default function Appointments() {
                                         <td>{d.user_contact}</td>
                                         <td>{d.user_email}</td>
                                         <td>
-                                            {new Date(d.appointment_datetime).toLocaleDateString()}
+                                            {new Date(d.appointment_date).toLocaleDateString()}
                                         </td>
                                         <td>
-                                            {new Date(d.appointment_datetime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                            {simpleTime(d.appointment_time)}
                                         </td>
                                         <td>{d.notes}</td>
                                         <td>{d.status}</td>
