@@ -232,7 +232,4 @@ export default function GetAppointment() {
 }
 
 
-
-
-
 // Working Pending
