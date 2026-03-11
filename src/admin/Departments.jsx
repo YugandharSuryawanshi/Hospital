@@ -34,32 +34,29 @@ export default function Departments() {
 
     // ADD
     const handleSubmit = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    if (!departmentName || !departmentDesc) {
-        toastInfo("Please fill all fields");
-        return;
-    }
+        if (!departmentName || !departmentDesc) {
+            toastInfo("Please fill all fields");
+            return;
+        }
 
-    const formData = new FormData();
-    formData.append("department_name", departmentName);
-    formData.append("department_desc", departmentDesc);
+        try {
+            await adminAxios.post("/addDepartment", {
+                department_name: departmentName,
+                department_desc: departmentDesc
+            });
+            fetchDepartments();
+            toastSuccess("Department added successfully");
 
-    try {
-        await adminAxios.post("/addDepartment", formData);
-
-        fetchDepartments();
-        toastSuccess("Department added successfully");
-
-        setDepartmentName("");
-        setDepartmentDesc("");
-        setViewMode("list");
-    } catch (error) {
-        console.error(error);
-        toastError("Failed to add department");
-    }
-};
-
+            setDepartmentName("");
+            setDepartmentDesc("");
+            setViewMode("list");
+        } catch (error) {
+            console.error(error);
+            toastError("Failed to add department");
+        }
+    };
 
     // EDIT
     const editDepartment = (dept) => {
@@ -72,23 +69,23 @@ export default function Departments() {
 
     // UPDATE
     const handleUpdate = async (e) => {
-    e.preventDefault();
+        e.preventDefault();
 
-    try {
-        await adminAxios.put(`/updateDepartment/${editId}`, {
-            department_name: departmentName,
-            department_desc: departmentDesc,
-            department_status: departmentStatus
-        });
+        try {
+            await adminAxios.put(`/updateDepartment/${editId}`, {
+                department_name: departmentName,
+                department_desc: departmentDesc,
+                department_status: departmentStatus
+            });
 
-        fetchDepartments();
-        toastSuccess("Department updated successfully");
-        setViewMode("list");
-    } catch (error) {
-        console.error(error);
-        toastError("Failed to update department");
-    }
-};
+            fetchDepartments();
+            toastSuccess("Department updated successfully");
+            setViewMode("list");
+        } catch (error) {
+            console.error(error);
+            toastError("Failed to update department");
+        }
+    };
 
     // DELETE
     const deleteDepartment = async (id) => {

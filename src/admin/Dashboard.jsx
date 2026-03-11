@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import adminAxios from "./adminAxios";
 
-
 export default function Dashboard() {
     const user = JSON.parse(localStorage.getItem("adminUser") || "null");
     const [counts, setCounts] = useState({
@@ -13,8 +12,6 @@ export default function Dashboard() {
         facilities: 0,
         departments: 0
     });
-
-
 
     useEffect(() => {
         const token = localStorage.getItem("adminToken");
@@ -33,8 +30,6 @@ export default function Dashboard() {
             console.error("Dashboard error:", error);
         }
     };
-
-
 
     return (
         <>
@@ -200,14 +195,3 @@ export default function Dashboard() {
         </>
     );
 }
-
-
-
-// bg-primary
-// bg-secondary
-// bg-success
-// bg-danger
-// bg-warning
-// bg-info
-// bg-light
-// bg-dark

@@ -19,13 +19,23 @@ import Register from "./Register.jsx";
 import YourAppointment from "./YourAppointment.jsx";
 
 export default function UserMain() {
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("userUser"));
-        if (user?.user_id) {
-            socket.emit("user_", user.user_id);
-            console.log("User joined socket room:", user.user_id);
-        }
-    }, [])
+    // useEffect(() => {
+    //     const user = JSON.parse(localStorage.getItem("userUser"));
+
+    //     if (user?.user_id) {
+    //         if (!socket.connected) {
+    //             socket.connect();
+    //         }
+
+    //         socket.emit("join-user", user.user_id);
+    //         console.log("User joined socket room:", user.user_id);
+    //     }
+
+    //     return () => {
+    //         socket.off("connect");
+    //     };
+
+    // }, []);
     return (
         <>
             <Nav />

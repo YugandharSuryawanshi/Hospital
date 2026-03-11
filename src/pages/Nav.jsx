@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContex";
@@ -16,11 +15,10 @@ export default function Nav() {
     // Notification
     const [count, setCount] = useState(0);
     const token = localStorage.getItem("userToken");
-    const URL = 'http://localhost:4000/api/user';
 
     // Get Department And Notification
     useEffect(() => {
-        axios.get(`${URL}/getDepartments`).then((res) => {
+        userAxios.get(`/getDepartments`).then((res) => {
             setDepartments(Array.isArray(res.data) ? res.data : []);
         });
         if (user) {
@@ -38,25 +36,30 @@ export default function Nav() {
 
     // Socket UseEffect
     useEffect(() => {
-        if (!token || !user) return;
+    if (!token || !user) return;
 
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const userId = payload.user_id;
+    const storedUser = JSON.parse(localStorage.getItem("userUser"));
+    const userId = storedUser?.user_id;
 
+    if (!socket.connected) {
         socket.connect();
-        socket.emit("join", userId);
+    }
 
-        socket.on("new-notification", (data) => {
-            setCount(prev => prev + 1);
-        });
+    if (userId) {
+        socket.emit("join-user", userId);
+    }
 
-        loadUnreadCount();
+    const handleNewNotification = (notification) => {
+        setCount(prev => prev + 1);
+    };
 
-        return () => {
-            socket.off("new-notification");
-            socket.disconnect();
-        };
-    }, [token, user]);
+    socket.on("new-notification", handleNewNotification);
+    loadUnreadCount();
+    return () => {
+        socket.off("new-notification", handleNewNotification);
+    };
+
+}, [token, user]);
 
     const loadUnreadCount = async () => {
         const res = await userAxios.get("/notifications/unread-count");
@@ -77,7 +80,6 @@ export default function Nav() {
         setCount(0);
         setImage(null);
         setName("");
-
         //Clear auth
         logout();
         localStorage.removeItem("userUser");

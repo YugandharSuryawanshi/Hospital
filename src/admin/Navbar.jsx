@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import "./Navbar.css";
+import { useEffect } from "react";
+import socket from "../socket";
 
 export default function Navbar() {
     const user = JSON.parse(localStorage.getItem("adminUser") || "null");
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [openGroups, setOpenGroups] = useState({});
-    const imageURL= 'http://localhost:4000/uploads'
+    const imageURL = 'http://localhost:4000/uploads'
+    const [count, setCount] = useState(0);
+    const token = localStorage.getItem("adminToken");
 
     const toggleGroup = (group) => {
         setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }));
@@ -18,6 +22,38 @@ export default function Navbar() {
         localStorage.removeItem("adminUser");
         localStorage.removeItem("adminToken");
         navigate("/admin/login");
+    };
+
+    useEffect(() => {
+        const token = localStorage.getItem("adminToken");
+        if (!token) return;
+        socket.connect();
+        socket.emit("join-admin");
+        socket.off("new-notification");
+        socket.on("new-notification", () => {
+            setCount(prev => prev + 1);
+        });
+
+        loadUnreadCount();
+        return () => {
+            socket.off("new-notification");
+            socket.disconnect();
+        };
+
+    }, []);
+
+    const loadUnreadCount = async () => {
+        try {
+            const res = await fetch("http://localhost:4000/api/admin/notifications/unread-count", {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+            setCount(data.count || 0);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -151,9 +187,17 @@ export default function Navbar() {
                         <i className="text-dark fas fa-bars nav-icon"></i>
                     </button>
                     <ul className="header-nav">
-                        <li><a NavLink="#">
-                            <i className="fas fa-bell nav-icon text-dark"></i>
-                        </a>
+                        <li>
+                            <div className="position-relative">
+                                <NavLink to="/admin/notifications" onClick={() => setCount(0)}>
+                                    <i className="fas fa-bell nav-icon text-dark"></i>
+                                    {count > 0 && (
+                                        <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
+                                            {count}
+                                        </span>
+                                    )}
+                                </NavLink>
+                            </div>
                         </li>
                     </ul>
                     <ul className="header-nav ms-auto">

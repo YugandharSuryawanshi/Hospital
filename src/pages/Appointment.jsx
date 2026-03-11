@@ -82,7 +82,7 @@ export default function Appointment() {
                 }
             );
             if (res.status === 409) {
-                toastError(res.data.message);
+                toastError(res.data.message +"Try Another Time Slot after Five Minute.");
             }
             const { bill_id, token_number, paymentMode: responsePaymentMode } = res.data;
             toastSuccess(res.data.message+'Your number is :- '+token_number);
@@ -93,6 +93,7 @@ export default function Appointment() {
             }
         } catch (error) {
             console.log("BOOK APPOINTMENT ERROR =>", error);
+            toastError(error.response.data.message);
         }
     };
 

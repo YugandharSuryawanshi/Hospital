@@ -16,8 +16,6 @@ export default function Appointments() {
     const itemsPerPage = 5;
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentAppointments = appointments.slice(indexOfFirstItem, indexOfLastItem);
-    const totalPages = Math.ceil(appointments.length / itemsPerPage);
 
     // Search/ filter
     const [search, setSearch] = useState("");
@@ -66,6 +64,9 @@ export default function Appointments() {
         const matchesStatus = filterStatus ? a.status === filterStatus : true;
         return matchesSearch && matchesDate && matchesStatus;
     });
+    
+    // Pagination
+    const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
 
     // export data in exel file
     const exportToExcel = () => {
@@ -100,6 +101,8 @@ export default function Appointments() {
         const tableColumn = [
             "Sr No",
             "Patient Name",
+            "Patient Email",
+            "Patient Phone",
             "Doctor",
             "Date",
             "Time",
@@ -109,6 +112,8 @@ export default function Appointments() {
         const tableRows = filteredAppointments.map((a, index) => [
             index + 1,
             a.user_name,
+            a.user_email,
+            a.user_contact,
             a.dr_name,
             new Date(a.appointment_datetime).toLocaleDateString("en-IN"),
             new Date(a.appointment_datetime).toLocaleTimeString("en-IN", {
@@ -266,26 +271,35 @@ export default function Appointments() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredAppointments.map((d, i) => (
-                                    <tr key={d.appointment_id}>
-                                        <td>{indexOfFirstItem + i + 1}</td>
-                                        <td>{d.user_name}</td>
-                                        <td>{d.user_contact}</td>
-                                        <td>{d.user_email}</td>
-                                        <td>
-                                            {new Date(d.appointment_date).toLocaleDateString()}
-                                        </td>
-                                        <td>
-                                            {simpleTime(d.appointment_time)}
-                                        </td>
-                                        <td>{d.notes}</td>
-                                        <td>{d.status}</td>
-                                        <td>{d.dr_name}</td>
-                                        <td>
-                                            <button className="btn btn-primary" onClick={() => editAppointment(d)}>View More</button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {filteredAppointments.length === 0 ? (
+    <tr>
+        <td colSpan="10" className="text-center">
+            No appointments found
+        </td>
+    </tr>
+) : (
+                                filteredAppointments
+                                    .slice(indexOfFirstItem, indexOfLastItem)
+                                    .map((d, i) => (
+                                        <tr key={d.appointment_id}>
+                                            <td>{indexOfFirstItem + i + 1}</td>
+                                            <td>{d.user_name}</td>
+                                            <td>{d.user_contact}</td>
+                                            <td>{d.user_email}</td>
+                                            <td>
+                                                {new Date(d.appointment_date).toLocaleDateString()}
+                                            </td>
+                                            <td>
+                                                {simpleTime(d.appointment_time)}
+                                            </td>
+                                            <td>{d.notes}</td>
+                                            <td>{d.status}</td>
+                                            <td>{d.dr_name}</td>
+                                            <td>
+                                                <button className="btn btn-primary" onClick={() => editAppointment(d)}>View More</button>
+                                            </td>
+                                        </tr>
+                                    )))}
                             </tbody>
                         </table>
 

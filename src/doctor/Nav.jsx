@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
+import socket from "../socket";
 import "./Navbar.css";
+import doctorAxios from "./doctorAxios";
 
 export default function Nav() {
     const user = JSON.parse(localStorage.getItem("doctorUser") || "null");
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const [openGroups, setOpenGroups] = useState({});
-    const imageURL= 'http://localhost:4000/uploads'
+    const imageURL = 'http://localhost:4000/uploads'
+    const [count, setCount] = useState(0);
+    const token = localStorage.getItem("doctorToken");
 
     const toggleGroup = (group) => {
         setOpenGroups((prev) => ({ ...prev, [group]: !prev[group] }));
@@ -15,9 +19,54 @@ export default function Nav() {
     const navigate = useNavigate();
 
     const handleLogout = () => {
+        socket.disconnect();
         localStorage.removeItem("doctorUser");
         localStorage.removeItem("doctorToken");
         navigate("/doctor/login");
+    };
+
+    // Socket UseEffect
+    useEffect(() => {
+        if (!token || !user) return;
+
+        doctorAxios.get("/notifications").then(res => {
+            const unread = res.data.filter(n => n.is_read === 0);
+            setCount(unread.length);
+        });
+
+        const userId = user.user_id;
+
+        if (!socket.connected) {
+            socket.connect();
+        }
+
+        const handleConnect = () => {
+            socket.emit("join-doctor", userId);
+        };
+
+        const handleNewNotification = () => {
+            setCount(prev => prev + 1);
+        };
+
+        socket.on("connect", handleConnect);
+        socket.on("new-notification", handleNewNotification);
+
+        loadUnreadCount();
+
+        return () => {
+            socket.off("connect", handleConnect);
+            socket.off("new-notification", handleNewNotification);
+        };
+
+    }, [token, user]);
+
+    const loadUnreadCount = async () => {
+        try {
+            const res = await doctorAxios.get("/notifications/unread-count");
+            setCount(res.data.count || 0);
+        } catch (err) {
+            console.log(err);
+        }
     };
 
     return (
@@ -151,9 +200,17 @@ export default function Nav() {
                         <i className="text-dark fas fa-bars nav-icon"></i>
                     </button>
                     <ul className="header-nav">
-                        <li><a NavLink="#">
-                            <i className="fas fa-bell nav-icon text-dark"></i>
-                        </a>
+                        <li>
+                            <div className="position-relative">
+                                <NavLink to="/doctor/notifications" onClick={() => setCount(0)}>
+                                    <i className="fas fa-bell nav-icon text-dark"></i>
+                                    {count > 0 && (
+                                        <span className="badge bg-danger position-absolute top-0 start-100 translate-middle">
+                                            {count}
+                                        </span>
+                                    )}
+                                </NavLink>
+                            </div>
                         </li>
                     </ul>
                     <ul className="header-nav ms-auto">

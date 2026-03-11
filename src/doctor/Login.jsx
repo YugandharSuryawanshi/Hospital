@@ -49,7 +49,7 @@ export default function Login() {
             toastSuccess("Login successful..!");
         } catch (err) {
             console.error("Login error", err);
-            const msg = err.response?.data?.message || err.response?.data?.error || err.message || "Login failed";
+            const msg = err.response?.data?.message || err.response?.data?.error || "Login failed";
             setError(msg);
         } finally {
             setLoading(false);
