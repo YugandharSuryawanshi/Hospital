@@ -1,106 +1,126 @@
 import { useEffect, useState } from "react";
+import { FaCalendarCheck, FaCheckCircle, FaClock, FaUserInjured } from "react-icons/fa";
+import AppointmentChart from "./components/AppointmentChart";
+import RecentAppointments from "./components/RecentAppointments";
+import RevenueChart from "./components/RevenueChart";
+import StatCard from "./components/StatCard";
+import GenderChart from "./components/GenderChart";
 import doctorAxios from "./doctorAxios";
 
 export default function Dashboard() {
 
-    const [stats, setStats] = useState({
-        total_today: 0,
-        waiting: 0,
-        completed: 0,
-        cancelled: 0,
-        approved: 0
-    });
-    const [doctorID, setDoctorId] = useState(null);
+    const [stats, setStats] = useState({});
+    const [chart, setChart] = useState([]);
+    const [revenue, setRevenue] = useState([]);
+    const [recent, setRecent] = useState([]);
+    const [genderData, setGenderData] = useState([]);
 
-    const doctor = JSON.parse(localStorage.getItem("doctorUser"));
-    const user_id = doctor.user_id;
+    const getDoctorStats = (doctorId) => {
+        return doctorAxios.get(`/stats/${doctorId}`);
+    };
+    const getAppointmentChart = (doctorId) => {
+        return doctorAxios.get(`/appointments-week/${doctorId}`);
+    };
+    const getRevenueChart = (doctorId) => {
+        return doctorAxios.get(`/revenue/${doctorId}`);
+    };
+    const getRecentAppointments = (doctorId) => {
+        return doctorAxios.get(`/recent/${doctorId}`);
+    };
+    const getGenderChart = (doctorId) => {
+        return doctorAxios.get(`/gender/${doctorId}`);
+    };
 
     useEffect(() => {
-        if (user_id) {
-            getDoctorId();
-        }
-    }, []);
-    const getDoctorId = async () => {
-        try {
 
-            const res = await doctorAxios.get(`/getDoctorID/${user_id}`);
-            console.log('Came Res Doc ID:- ' + res.data.doctor_id);
-            const docId = res.data.doctor_id;
+        loadDashboard();
 
-            console.log("Doctor ID:", docId);
+    }, [])
 
-            setDoctorId(docId);
-            console.log('id store in usestate is :- ' + doctorID);
+    const loadDashboard = async () => {
 
-            getStats(res.data.doctor_id);
+        const doctorRes = await doctorAxios.get("/getDoctorID");
 
-        } catch (err) {
-            console.error(err);
-        }
-    };
+        const doctorId = doctorRes.data.doctor_id;
 
-    const getStats = async (doctorID) => {
-        try {
-            const res = await doctorAxios.get(`/doctor/stats/${doctorID}`);
-            setStats(res.data);
-        } catch (err) {
-            console.error(err);
-        }
-    };
+        const statsRes = await getDoctorStats(doctorId);
+        setStats(statsRes.data);
+
+        const chartRes = await getAppointmentChart(doctorId);
+        setChart(chartRes.data);
+
+        const revenueRes = await getRevenueChart(doctorId);
+        setRevenue(revenueRes.data);
+
+        const recentRes = await getRecentAppointments(doctorId);
+        setRecent(recentRes.data);
+
+        const genderRes = await getGenderChart(doctorId);
+        setGenderData(genderRes.data);
+    }
+
     return (
-        <div className="container mt-4">
 
-            <h2 className="mb-4 text-danger">Doctor Dashboard</h2>
+        <div className="container-fluid">
+
+            <div className="row mb-4">
+
+                <StatCard
+                    title="Total Patients"
+                    value={stats.totalPatients}
+                    icon={<FaUserInjured />}
+                    color="blue"
+                />
+
+                <StatCard
+                    title="Today Appointments"
+                    value={stats.todayAppointments}
+                    icon={<FaCalendarCheck />}
+                    color="green"
+                />
+
+                <StatCard
+                    title="Upcoming"
+                    value={stats.upcoming}
+                    icon={<FaClock />}
+                    color="orange"
+                />
+
+                <StatCard
+                    title="Completed"
+                    value={stats.completed}
+                    icon={<FaCheckCircle />}
+                    color="purple"
+                />
+
+            </div>
 
             <div className="row">
 
-                <div className="col-md-3">
-                    <div className="card text-center shadow">
-                        <div className="card-body">
-                            <h5>Total Today</h5>
-                            <h2>{stats.total_today}</h2>
-                        </div>
-                    </div>
+                <div className="col-md-6">
+                    <AppointmentChart data={chart} />
                 </div>
 
-                <div className="col-md-3">
-                    <div className="card text-center shadow">
-                        <div className="card-body">
-                            <h5>Waiting</h5>
-                            <h2>{stats.waiting}</h2>
-                        </div>
-                    </div>
+                <div className="col-md-6">
+                    <RevenueChart data={revenue} />
                 </div>
 
-                <div className="col-md-3">
-                    <div className="card text-center shadow">
-                        <div className="card-body">
-                            <h5>Completed</h5>
-                            <h2>{stats.completed}</h2>
-                        </div>
-                    </div>
+            </div>
+
+            <div className="row mt-4">
+
+                <div className="col-md-6">
+                    <GenderChart data={genderData} />
                 </div>
 
-                <div className="col-md-3">
-                    <div className="card text-center shadow">
-                        <div className="card-body">
-                            <h5>Approved</h5>
-                            <h2>{stats.approved}</h2>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-md-3">
-                    <div className="card text-center shadow">
-                        <div className="card-body">
-                            <h5>Cancelled</h5>
-                            <h2>{stats.cancelled}</h2>
-                        </div>
-                    </div>
+                <div className="col-md-6">
+                    <RecentAppointments appointments={recent} />
                 </div>
 
             </div>
 
         </div>
-    );
+
+    )
+
 }
