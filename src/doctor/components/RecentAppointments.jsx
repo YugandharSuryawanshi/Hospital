@@ -1,6 +1,16 @@
-import React from "react";
+import { format } from 'date-fns';
+import { toZonedTime } from "date-fns-tz";
 
 const RecentAppointments = ({ appointments }) => {
+
+    const formatDate = (dateString) => {
+
+        const timeZone = "Asia/Kolkata";
+
+        const zonedDate = toZonedTime(dateString, timeZone);
+
+        return format(zonedDate, "dd MMM yyyy, hh:mm a");
+    };
 
     return (
 
@@ -24,7 +34,7 @@ const RecentAppointments = ({ appointments }) => {
 
                         <tr key={index}>
                             <td>{a.patient_name}</td>
-                            <td>{a.appointment_date}</td>
+                            <td>{formatDate(a.appointment_datetime)}</td>
                             <td>{a.status}</td>
                         </tr>
 

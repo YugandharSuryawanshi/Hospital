@@ -1,7 +1,7 @@
 import React from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
 
-const COLORS = ["#0088FE", "#FF69B4", "#FFBB28"];
+const COLORS = ["#fc6c29", "#FF69B4", "#FFBB28"];
 
 const GenderChart = ({ data }) => {
 
@@ -39,9 +39,7 @@ const GenderChart = ({ data }) => {
             </ResponsiveContainer>
 
         </div>
-
     );
-
 };
 
 export default GenderChart;

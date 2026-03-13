@@ -109,11 +109,11 @@ export default function Dashboard() {
 
             <div className="row mt-4">
 
-                <div className="col-md-6">
+                <div className="col-md-4 mb-4">
                     <GenderChart data={genderData} />
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-8">
                     <RecentAppointments appointments={recent} />
                 </div>
 
@@ -124,3 +124,4 @@ export default function Dashboard() {
     )
 
 }
+

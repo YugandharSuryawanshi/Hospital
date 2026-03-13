@@ -14,14 +14,12 @@ const AppointmentChart = ({ data }) => {
                     <XAxis dataKey="day" />
                     <YAxis />
                     <Tooltip />
-                    <Line type="monotone" dataKey="appointments" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="appointments" stroke="#f84024" />
                 </LineChart>
             </ResponsiveContainer>
-
+            
         </div>
-
     )
-
 }
 
 export default AppointmentChart;

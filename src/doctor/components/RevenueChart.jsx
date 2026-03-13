@@ -4,7 +4,6 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recha
 const RevenueChart = ({ data }) => {
 
     return (
-
         <div className="card shadow p-3">
 
             <h5>Monthly Revenue</h5>
@@ -14,14 +13,13 @@ const RevenueChart = ({ data }) => {
                     <XAxis dataKey="month" />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="revenue" fill="#82ca9d" />
+                    <Bar dataKey="revenue" fill="#f65e00" />
                 </BarChart>
             </ResponsiveContainer>
 
         </div>
 
     )
-
 }
 
 export default RevenueChart;
