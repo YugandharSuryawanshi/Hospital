@@ -32,9 +32,7 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-
         loadDashboard();
-
     }, [])
 
     const loadDashboard = async () => {
@@ -122,4 +120,3 @@ export default function Dashboard() {
 
     )
 }
-
