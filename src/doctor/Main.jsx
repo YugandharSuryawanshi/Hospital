@@ -1,10 +1,11 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import Nav from "./Nav";
-import ProtectedRoute from "./ProtectedRoute";
-import Login from "./Login";
-import Dashboard from "./Dashboard";
 import TodayAppointments from "./Appointments";
+import Dashboard from "./Dashboard";
 import DoctorQueue from "./DoctorQueue";
+import Login from "./Login";
+import Nav from "./Nav";
+import Notifications from "./Notifications";
+import ProtectedRoute from "./ProtectedRoute";
 
 export default function DoctorMain() {
     return (
@@ -19,6 +20,7 @@ export default function DoctorMain() {
                 <Route index element={<Dashboard />} />
                 <Route path="/doctor/queue" element={<DoctorQueue />} />
                 <Route path="/doctor/appointments" element={<TodayAppointments />} />
+                <Route path="/notifications" element={<Notifications />} />
             </Route>
 
             <Route path="/" element={<Navigate to="/doctor" replace />} />
