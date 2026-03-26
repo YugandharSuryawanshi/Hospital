@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import adminAxios from "./adminAxios";
 import { toastSuccess, toastError, toastInfo } from "../utils/toast";
 
-
 export default function Profile() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
