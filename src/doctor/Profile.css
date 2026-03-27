@@ -1,0 +1,102 @@
+body {
+    background: linear-gradient(135deg, #ffac13, #f87a99);
+}
+
+.profile-page {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-card {
+    width: 900px;
+    display: flex;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* LEFT PANEL */
+.left-panel {
+    width: 35%;
+    background: rgba(255, 255, 255, 0.2);
+    text-align: center;
+    padding: 30px;
+}
+
+.avatar-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 120px;
+    height: 120px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.avatar-wrapper:hover .overlay {
+    opacity: 1;
+}
+
+/* TABS */
+.tabs button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: none;
+    background: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.tabs .active {
+    background: #8e2828;
+    color: #fff;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+    width: 65%;
+    padding: 40px;
+}
+
+.form input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: none;
+}
+
+.form button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #ff512f, #dd2476);
+    border: none;
+    color: white;
+    border-radius: 10px;
+    transition: 0.3s;
+}
+
+.form button:hover {
+    transform: scale(1.05);
+}

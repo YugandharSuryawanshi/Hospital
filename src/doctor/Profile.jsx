@@ -1,143 +1,169 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toastError, toastInfo, toastSuccess } from "../utils/toast";
 import doctorAxios from "./doctorAxios";
-
+import { toastError, toastSuccess } from "../utils/toast";
+import "./Profile.css";
 
 export default function Profile() {
+
+    const [tab, setTab] = useState("profile");
+
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [image, setImage] = useState(null);
-    const [currentImage, setCurrentImage] = useState(null);
+    const [preview, setPreview] = useState(null);
 
-    const navigate = useNavigate();
+    const [step, setStep] = useState(1);
+    const [otp, setOtp] = useState("");
+    const [newPass, setNewPass] = useState("");
+    const [confirmPass, setConfirmPass] = useState("");
 
     const user = JSON.parse(localStorage.getItem("doctorUser") || "null");
-    const id = user ? user.user_id : null;
-    const imageUrl = currentImage ? `http://localhost:4000/uploads/${currentImage}` : null;
 
     useEffect(() => {
         if (user) {
-            setName(user.user_name || "");
-            setEmail(user.user_email || "");
-            setCurrentImage(user.user_profile || null);
+            setName(user.user_name);
+            setEmail(user.user_email);
+            setPreview(`http://localhost:4000/uploads/${user.user_profile}`);
         }
     }, []);
 
+    // ================= PROFILE UPDATE =================
     const updateProfile = async (e) => {
         e.preventDefault();
-        if (!name || !email) {
-            toastError("Name and Email are required!");
-            return;
-        }
 
         try {
-            const token = localStorage.getItem("doctorToken");
-            if (!token) {
-                toastInfo('Session expired, Please log in again.');
-                navigate("/doctor/login");
-                return;
-            }
-
             const formData = new FormData();
-            formData.append("id", id);
+            formData.append("id", user.user_id);
             formData.append("name", name);
             formData.append("email", email);
             if (image) formData.append("image", image);
 
-            const res = await doctorAxios.put("/profile", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            });
+            const res = await doctorAxios.put("/profile", formData);
 
+            localStorage.setItem("doctorUser", JSON.stringify(res.data.user));
+            toastSuccess("Profile Updated 🚀");
 
-            const updatedUser = res.data.user;
-            localStorage.setItem("doctorUser", JSON.stringify(updatedUser));
-
-            setCurrentImage(updatedUser.user_profile || null);
-            toastSuccess("Profile updated successfully..!");
-        } catch (err) {
-            console.error("Profile update error:", err.response?.data || err.message);
-            toastError(err.response?.data?.message || "Profile update failed");
+        } catch {
+            toastError("Update Failed");
         }
     };
 
+    // ================= OTP =================
+    const sendOTP = async () => {
+        await doctorAxios.post("/send-otp", { email });
+        toastSuccess("OTP Sent 📩");
+        setStep(2);
+    };
+
+    const changePassword = async () => {
+
+        if (newPass !== confirmPass) {
+            return toastError("Passwords not match");
+        }
+
+        await doctorAxios.post("/verify-otp-change-password", {
+            email,
+            otp,
+            newPass
+        });
+
+        toastSuccess("Password Updated 🔐");
+        setStep(1);
+    };
+
     return (
-        <>
-            <div className="container-fluid">
-                <div className="row">
-                    <div className="col-md-12 p-0">
-                        <h1 className="ml-2 mt-3">Profile</h1>
-                        <ul>
-                            <li className="d-inline-block ml-3">Home</li>
-                            <li className="d-inline-block ml-3">
-                                <i className="fa-solid fa-chevron-right"></i>
-                            </li>
-                            <li className="d-inline-block ml-3">Profile</li>
-                        </ul>
+        <div className="profile-page">
+
+            <div className="profile-card">
+
+                {/* LEFT PANEL */}
+                <div className="left-panel">
+
+                    <div className="avatar-wrapper">
+                        <img src={preview} className="avatar" />
+                        <div className="overlay">Change</div>
                     </div>
+
+                    <h4>{name}</h4>
+                    <p>{email}</p>
+
+                    <div className="tabs">
+                        <button
+                            className={tab === "profile" ? "active" : ""}
+                            onClick={() => setTab("profile")}
+                        >
+                            Profile
+                        </button>
+
+                        <button
+                            className={tab === "password" ? "active" : ""}
+                            onClick={() => setTab("password")}
+                        >
+                            Password
+                        </button>
+                    </div>
+
                 </div>
-            </div>
 
-            <div className="container d-flex justify-content-center align-items-center min-vh-100">
-                <div
-                    className="card shadow-lg border-0 rounded-4 p-4 w-100"
-                    style={{ maxWidth: "500px" }}
-                >
-                    <h2 className="text-center mb-4 fw-bold text-primary">Update Profile</h2>
+                {/* RIGHT PANEL */}
+                <div className="right-panel">
 
-                    {imageUrl && (
-                        <div className="text-center mb-3">
-                            <img src={imageUrl} alt="Current Profile"
-                                style={{
-                                    width: 120,
-                                    height: 120,
-                                    objectFit: "cover",
-                                    borderRadius: "50%",
-                                    border: "2px solid #ddd",
-                                }} />
+                    {tab === "profile" && (
+                        <form onSubmit={updateProfile} className="form">
+
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Full Name"
+                            />
+
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Email"
+                            />
+
+                            <input
+                                type="file"
+                                onChange={(e) => {
+                                    setImage(e.target.files[0]);
+                                    setPreview(URL.createObjectURL(e.target.files[0]));
+                                }}
+                            />
+
+                            <button>Update Profile</button>
+                        </form>
+                    )}
+
+                    {tab === "password" && (
+                        <div className="form">
+
+                            {step === 1 && (
+                                <button onClick={sendOTP}>
+                                    Send OTP
+                                </button>
+                            )}
+
+                            {step === 2 && (
+                                <>
+                                    <input placeholder="Enter OTP" onChange={(e) => setOtp(e.target.value)} />
+                                    <input type="password" placeholder="New Password" onChange={(e) => setNewPass(e.target.value)} />
+                                    <input type="password" placeholder="Confirm Password" onChange={(e) => setConfirmPass(e.target.value)} />
+
+                                    <button onClick={changePassword}>
+                                        Change Password
+                                    </button>
+                                </>
+                            )}
+
                         </div>
                     )}
 
-                    <form onSubmit={updateProfile}>
-                        <div className="mb-3">
-                            <label className="form-label fw-semibold">Full Name</label>
-                            <input
-                                type="text"
-                                className="form-control form-control-lg"
-                                placeholder="Enter your name"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="mb-3">
-                            <label className="form-label fw-semibold">Email Address</label>
-                            <input
-                                type="email"
-                                className="form-control form-control-lg"
-                                placeholder="Enter your email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="mb-4">
-                            <label className="form-label fw-semibold">Profile Image</label>
-                            <input
-                                type="file"
-                                className="form-control form-control-lg"
-                                onChange={(e) => setImage(e.target.files[0])}
-                            />
-                        </div>
-
-                        <div className="d-grid text-center">
-                            <button type="submit" className="btn btn-warning btn-lg shadow-sm register-btn">
-                                Update
-                            </button>
-                        </div>
-                    </form>
                 </div>
+
             </div>
-        </>
+        </div>
     );
 }
