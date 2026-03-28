@@ -13,32 +13,35 @@ import ProtectedRoute from "./ProtectedRoute";
 import Register from "./Register";
 import Slides from "./Slides";
 import SlidesList from "./SlidesList";
+import "../App.css";
 
 export default function AdminMain() {
     return (
-        <Routes>
-            <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+        <div className="color_format_back">
+            <Routes>
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
 
-            <Route path="/" element={
-                <ProtectedRoute>
-                    <Navbar />
-                </ProtectedRoute>
-            }>
-                <Route index element={<Dashboard />} />
-                <Route path="slides" element={<Slides />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="slidelist" element={<SlidesList />} />
-                <Route path="doctors" element={<Doctors />} />
-                <Route path="appointments" element={<Appointments />} />
-                <Route path="facilities" element={<Facilities />} />
-                <Route path="patients" element={<Patient />} />
-                <Route path="departments" element={<Departments />} />
-                <Route path="notifications" element={<Notifications/>} />
-            </Route>
+                <Route path="/" element={
+                    <ProtectedRoute>
+                        <Navbar />
+                    </ProtectedRoute>
+                }>
+                    <Route index element={<Dashboard />} />
+                    <Route path="slides" element={<Slides />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="slidelist" element={<SlidesList />} />
+                    <Route path="doctors" element={<Doctors />} />
+                    <Route path="appointments" element={<Appointments />} />
+                    <Route path="facilities" element={<Facilities />} />
+                    <Route path="patients" element={<Patient />} />
+                    <Route path="departments" element={<Departments />} />
+                    <Route path="notifications" element={<Notifications />} />
+                </Route>
 
-            <Route path="/" element={<Navigate to="/admin" replace />} />
-            <Route path="*" element={<Navigate to="/admin" replace />} />
-        </Routes>
+                <Route path="/" element={<Navigate to="/admin" replace />} />
+                <Route path="*" element={<Navigate to="/admin" replace />} />
+            </Routes>
+        </div>
     );
 }

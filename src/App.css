@@ -1,3 +1,7 @@
+.color_format_back {
+    background: linear-gradient(135deg, #ffac13, #f87a99);
+}
+
 .App {
   text-align: center;
 }

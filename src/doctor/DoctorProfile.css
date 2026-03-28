@@ -1,7 +1,3 @@
-body {
-    background: linear-gradient(135deg, #ffac13, #f87a99);
-}
-
 .profile-page {
     height: 100vh;
     display: flex;
@@ -99,4 +95,14 @@ body {
 
 .form button:hover {
     transform: scale(1.05);
+}
+
+.text-darker {
+    color: black;
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.text-dangers {
+    font-size: 16px;
 }
